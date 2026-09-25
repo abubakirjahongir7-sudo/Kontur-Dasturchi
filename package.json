@@ -2,18 +2,15 @@
   "name": "kontur-dasturchi-promo",
   "version": "1.0.0",
   "private": true,
-  "description": "Kontur Dasturchi — portfolio promo video (Remotion)",
+  "description": "Kontur Dasturchi — Instagram Reels reklama videosi (Remotion)",
   "scripts": {
     "dev": "remotion studio",
-    "render": "remotion render Promo out/promo-vertical.mp4",
-    "render:wide": "remotion render PromoWide out/promo-wide.mp4",
-    "render:all": "npm run render && npm run render:wide",
+    "render": "remotion render Reel out/reel.mp4",
     "check": "node scripts/check-assets.mjs",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@fontsource-variable/manrope": "5.3.0",
-    "@fontsource-variable/unbounded": "5.3.0",
+    "@fontsource-variable/montserrat": "5.3.0",
     "@remotion/cli": "4.0.529",
     "@remotion/fonts": "4.0.529",
     "@remotion/media": "4.0.529",

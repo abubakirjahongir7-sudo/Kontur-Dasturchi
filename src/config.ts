@@ -1,115 +1,127 @@
-// Videodagi barcha matnlar, rasmlar va vaqtlar shu yerda.
+// Videodagi barcha matnlar, rasmlar, ovozlar va vaqtlar shu yerda.
 // Matnni o'zgartirish uchun faqat shu faylni tahrirlang.
 
-export type Device = 'browser' | 'phone';
+export const FPS = 30;
+export const WIDTH = 1080;
+export const HEIGHT = 1920;
+export const DURATION = 24 * FPS; // 720 kadr
+
+// ---------- MATNLAR ----------
+
+/** 1. HOOK — so'zlar birma-bir "urilib" chiqadi (bo'sh joy = yangi qator) */
+export const hook = {
+  words: ['VIBE CODING', 'PROMPT ENGINEERING', 'DIZAYN'],
+};
+
+/** 2. MUAMMO */
+export const problem = {
+  title: 'MUAMMO BORMI?',
+  cards: ['Biznesingizda?', 'O‘quv kursingizda?', 'Hisob-kitobda?'],
+};
+
+/** 3. BURILISH */
+export const turn = {
+  text: 'YECHIM BIZDA!',
+};
+
+export type ScreenFit = 'cover' | 'width';
 
 export type Project = {
-  /** public/ ichidagi rasm fayli */
+  /** public/ ichidagi rasm — faqat telefon ekranidagi qism (ramkasiz) */
   image: string;
   title: string;
-  subtitle: string;
-  tags: string[];
   /**
-   * Rasm qaysi ramkada ko'rsatiladi. Yozilmasa — avtomatik:
-   * telefon skrinshoti (tor va baland) → telefon, qolgani → brauzer.
+   * cover — rasm ekranni to'liq qoplaydi (foto va telefon skrinshotlari uchun);
+   * width — rasm eni bo'yicha joylashadi, qolgan joy `screenBg` rangida bo'ladi
+   * (kompyuter skrinshotlari uchun)
    */
-  device?: Device;
-  /** Sahna uchun ikki rangli gradient */
-  accent: [string, string];
+  fit?: ScreenFit;
+  screenBg?: string;
+  /** Rasm bo'lmasa ekranda chizilgan namuna ko'rsatiladi */
+  fallback?: 'savdo';
 };
 
-export const brand = {
-  name: 'KONTUR',
-  suffix: 'DASTURCHI',
-  tagline: 'Veb-saytlar · AI · Onlayn savdo',
-  outroQuestion: 'Sizga ham shunday sayt kerakmi?',
-  cta: 'Hoziroq yozing',
-  // TODO: haqiqiy kontaktlaringizni yozing
-  contacts: ['Telegram: @username', '+998 90 000 00 00'],
+/** 4. LOYIHALAR */
+export const projects: {label: string; items: Project[]} = {
+  label: 'LOYIHALARIMIZ',
+  items: [
+    {image: 'ai.jpg', title: 'AI integratsiya', fit: 'cover'},
+    {image: 'kafe.jpg', title: 'Kafe tizimi', fit: 'cover'},
+    {image: 'kurs.jpg', title: 'O‘quv kurs sayti', fit: 'width', screenBg: '#0E1522'},
+    // savdo.jpg hali yo'q bo'lsa, o'rniga chizilgan savdo paneli ko'rsatiladi
+    {image: 'savdo.jpg', title: 'Savdo tizimi', fit: 'cover', fallback: 'savdo'},
+  ],
 };
 
-export const projects: Project[] = [
-  {
-    image: 'hero.jpg',
-    title: 'Landing sahifalar',
-    subtitle: 'Birinchi ekrandanoq mijozni ushlab qoladigan saytlar',
-    tags: ['Zamonaviy dizayn', 'Mobilga mos', 'Tez yuklanadi'],
-    accent: ['#7C5CFF', '#22D3EE'],
-  },
-  {
-    image: 'ai.jpg',
-    title: 'AI bilan integratsiya',
-    subtitle: 'Sayt va botlaringizga sun’iy intellekt ulaymiz',
-    tags: ['AI chat-bot', 'Avto-javoblar', '24/7 yordamchi'],
-    accent: ['#22D3EE', '#34D399'],
-  },
-  {
-    image: 'kafe.jpg',
-    title: 'Kafe menyusi',
-    subtitle: 'QR-kod orqali ochiladigan chiroyli elektron menyu',
-    tags: ['QR-menyu', 'Mobil versiya', 'Oson yangilash'],
-    accent: ['#FB923C', '#F43F5E'],
-  },
-  {
-    image: 'kurs.jpg',
-    title: 'O‘quv kursi sayti',
-    subtitle: 'Kurslar, darslar va ariza qabul qilish — bitta joyda',
-    tags: ['Kurs sahifalari', 'Ariza qabul qilish', 'Mobilga mos'],
-    accent: ['#60A5FA', '#A78BFA'],
-  },
-  {
-    image: 'savdo.jpg',
-    title: 'Ozon / onlayn savdo',
-    subtitle: 'Marketplace’da savdoni o‘stirish uchun yechimlar',
-    tags: ['Ozon', 'Mahsulot kartochkalari', 'Ko‘proq sotuv'],
-    accent: ['#005BFF', '#F91155'],
-  },
-];
+/** 5. CTA */
+export const cta = {
+  brandFirst: 'Kontur',
+  brandSecond: 'Dasturchi',
+  avatar: 'avatar.jpg',
+  tagline: 'Bizda g‘oya mutlaqo bepul!',
+  button: 'Bepul konsultatsiya olish',
+  telegram: 'Telegram: +7 911 828 5166',
+  instagram: 'kontur_dasturchi',
+  instagramBio: 'AI • Vibe Coding • Prompt Engineering',
+  directButton: 'Xabar yuborish',
+  directHint: 'Direct’ga yozing!',
+};
+
+// ---------- OVOZ ----------
 
 export const audio = {
   music: 'music.mp3',
+  /** Musiqani nechanchi soniyadan boshlash (masalan, "drop" joyidan) */
+  musicStartSeconds: 0,
+  musicVolume: 0.6,
   whoosh: 'sfx/whoosh.mp3',
   impact: 'sfx/impact.mp3',
   riser: 'sfx/riser.mp3',
   pop: 'sfx/pop.mp3',
 };
 
-// ---- Vaqtlar (kadrlarda, 30 kadr = 1 soniya) ----
+// ---------- RANGLAR ----------
 
-export const FPS = 30;
-export const TRANSITION_FRAMES = 16;
+export const colors = {
+  orange: '#E8651A',
+  orangeDeep: '#B8420C',
+  card: '#4A2210',
+  cardBorder: 'rgba(255, 214, 150, 0.22)',
+  accent: '#F5B82E',
+  text: '#FFFFFF',
+  dark: '#120702',
+  danger: '#FF3B30',
+};
 
-export const INTRO_FRAMES = 105;
-export const FIRST_PROJECT_FRAMES = 126;
-export const PROJECT_FRAMES = 108;
-export const OUTRO_FRAMES = 150;
+// ---------- VAQTLAR (kadrlarda, 30 kadr = 1 soniya) ----------
 
-// Intro ichidagi lahzalar
-export const INTRO_IMPACT = 40;
-export const INTRO_TAGLINE = 52;
+export const scenes = {
+  hook: {from: 0, duration: 90}, // 0–3s
+  problem: {from: 90, duration: 150}, // 3–8s
+  turn: {from: 240, duration: 45}, // 8–9.5s
+  projects: {from: 285, duration: 285}, // 9.5–19s
+  cta: {from: 570, duration: 150}, // 19–24s
+};
 
-// Loyiha sahnasi ichidagi lahzalar
-export const CHIPS_START = 34;
-export const CHIP_STAGGER = 6;
+// Sahnalar ichidagi lahzalar (har biri o'z sahnasi boshidan hisoblanadi)
+export const HOOK_FLASH = 4;
+export const HOOK_WORDS = [10, 36, 62];
 
-// Outro ichidagi lahzalar
-export const OUTRO_CTA = 62;
-export const OUTRO_CONTACTS = 80;
+export const PROBLEM_TITLE = 4;
+export const PROBLEM_CARDS = [40, 64, 88];
 
-export const sceneDurations: number[] = [
-  INTRO_FRAMES,
-  ...projects.map((_, i) => (i === 0 ? FIRST_PROJECT_FRAMES : PROJECT_FRAMES)),
-  OUTRO_FRAMES,
-];
+export const TURN_FLASH = 18;
 
-/** Har bir sahnaning umumiy videodagi boshlanish kadri (o'tishlar hisobga olingan) */
-export const sceneStarts: number[] = sceneDurations.reduce<number[]>(
-  (starts, _, i) => {
-    if (i === 0) return [0];
-    return [...starts, starts[i - 1] + sceneDurations[i - 1] - TRANSITION_FRAMES];
-  },
-  [],
+export const PROJECT_STARTS = projects.items.map((_, i) =>
+  Math.round((scenes.projects.duration / projects.items.length) * i),
 );
 
-export const TOTAL_FRAMES =
-  sceneStarts[sceneStarts.length - 1] + sceneDurations[sceneDurations.length - 1];
+export const CTA_AVATAR = 0;
+export const CTA_BRAND = 6;
+export const CTA_TAGLINE = 14;
+export const CTA_BUTTON = 24;
+export const CTA_TELEGRAM = 40;
+export const CTA_INSTAGRAM = 54;
+export const CTA_ARROW = 66;
+/** Tugma shu kadrlarda "puls" qiladi (har biriga pop) */
+export const CTA_PULSES = [80, 110, 140];

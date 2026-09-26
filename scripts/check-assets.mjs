@@ -4,10 +4,14 @@ import {existsSync, readFileSync} from 'node:fs';
 import {join} from 'node:path';
 
 const config = readFileSync(new URL('../src/config.ts', import.meta.url), 'utf8');
+const musicEnabled = /musicEnabled:\s*true/.test(config);
 const files = [
   ...[...config.matchAll(/(?:image|avatar):\s*'([^']+)'/g)].map((m) => m[1]),
-  ...[...config.matchAll(/^\s*\w+:\s*'((?:sfx\/)?[\w-]+\.(?:mp3|wav|m4a|aac))'/gm)].map((m) => m[1]),
+  ...[...config.matchAll(/^\s*(\w+):\s*'((?:sfx\/)?[\w-]+\.(?:mp3|wav|m4a|aac))'/gm)]
+    .filter((m) => m[1] !== 'music' || musicEnabled)
+    .map((m) => m[2]),
 ];
+if (!musicEnabled) console.log('Fon musiqasi o‘chirilgan (config.ts: audio.musicEnabled = false)\n');
 
 let missing = 0;
 for (const file of files) {

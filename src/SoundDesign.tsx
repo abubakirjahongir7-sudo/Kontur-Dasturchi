@@ -52,7 +52,7 @@ const duckAt = (f: number, hits: number[]) => {
 };
 
 export const SoundDesign: React.FC<{riserSeconds: number | null}> = ({riserSeconds}) => {
-  const music = audioAsset(audio.music);
+  const music = audio.musicEnabled ? audioAsset(audio.music) : null;
   const impacts = [
     ...HOOK_WORDS,
     scenes.problem.from + PROBLEM_TITLE,

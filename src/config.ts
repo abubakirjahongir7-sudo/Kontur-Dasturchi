@@ -126,12 +126,18 @@ export const cta = {
 // ---------- OVOZ ----------
 
 export const audio = {
+  /**
+   * Fon musiqasi o'chirilgan: videoda faqat animatsiya ovozlari bor,
+   * musiqani Instagram'da joylayotganda qo'shasiz.
+   * Qayta yoqish uchun `true` qiling va public/music.mp3 ni qo'ying.
+   */
+  musicEnabled: false,
   music: 'music.mp3',
   /** Musiqani nechanchi soniyadan boshlash (masalan, "drop" joyidan) */
   musicStartSeconds: 0,
   musicVolume: 0.5,
   /** Barcha ovoz effektlarining umumiy balandligi */
-  sfxVolume: 0.72,
+  sfxVolume: 0.9,
   whoosh: 'sfx/whoosh.mp3',
   impact: 'sfx/impact.mp3',
   riser: 'sfx/riser.mp3',

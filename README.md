@@ -16,7 +16,8 @@ Barcha yozuvlar va kartalar **glass (shisha) effekti** bilan: orqa fonni xiralas
 | 41–51s | **Jarayon** | "4 qadamda tayyor": konsultatsiya → dizayn → ishlab chiqish → ishga tushirish, oxirida ✓ belgilar | har qadamga `whoosh`, belgilarga `pop` |
 | 51–60s | **CTA** | Rasm, "Kontur Dasturchi", "Bizda g‘oya mutlaqo bepul!", pulslovchi tugma, Telegram, Instagram kartasi va **Direct'ga yozing** strelkasi | `pop` lar |
 
-`music.mp3` butun video bo'ylab yangraydi (60 soniyadan qisqa bo'lsa takrorlanadi) va oxirgi 1.5 soniyada so'nadi.
+**Fon musiqasi yo'q** — videoda faqat animatsiya ovozlari bor. Musiqani Instagram'da joylayotganda (masalan, "Energetic Highway") qo'shasiz.
+Qayta yoqish kerak bo'lsa: `src/config.ts` da `audio.musicEnabled: true` qiling va `public/music.mp3` ni qo'ying.
 
 ## Fayllar (`public/`)
 
@@ -28,19 +29,18 @@ public/
   savdo.jpg     ← savdo tizimi ekrani                 (YO'Q — o'rniga chizilgan savdo paneli chiqadi)
   avatar.jpg    ← CTA dagi rasmingiz                  (bor, hero.jpg dan kesilgan)
   hero.jpg      ← landing bosh sahifasi (dizayn namunasi, videoda ishlatilmaydi)
-  music.mp3     ← fon musiqasi — "Energetic Highway" ni shu nom bilan qo'ying
+  music.mp3     ← fon musiqasi (hozir o'chirilgan, kerak emas)
   sfx/whoosh.mp3, sfx/impact.mp3, sfx/riser.mp3, sfx/pop.mp3
 ```
 
 ### Ovoz: sizning fayllaringiz va demo ovozlar
 
-`public/demo/` da demo ovozlar bor: energik 128 BPM musiqa (aniq 60 soniya) va whoosh, impact, riser, pop effektlari. Ularni kod bilan sintez qilib yaratganman — original, hech kimning musiqasi emas, litsenziya muammosi yo'q.
+`public/demo/sfx/` da demo ovoz effektlari bor: whoosh, impact, riser, pop. Ularni kod bilan sintez qilib yaratganman — original, litsenziya muammosi yo'q.
 
-- `public/music.mp3` yoki `public/sfx/*.mp3` **bo'lmasa**, video avtomatik `public/demo/` dagisini ishlatadi.
-- O'z faylingizni (masalan, "Energetic Highway" ni `public/music.mp3` qilib) qo'ysangiz, **sizniki ishlatiladi**.
+- `public/sfx/*.mp3` **bo'lmasa**, video avtomatik `public/demo/sfx/` dagisini ishlatadi.
+- O'z faylingizni qo'ysangiz, **sizniki ishlatiladi**.
 
-Zarba (impact) paytida musiqa bir lahzaga pasayadi — zarba aniqroq eshitiladi va ovoz "kesilib" qolmaydi.
-Balandlikni `src/config.ts` dagi `audio.musicVolume` va `audio.sfxVolume` bilan sozlang.
+Effektlar balandligi: `src/config.ts` dagi `audio.sfxVolume`.
 
 `ai.jpg`, `kafe.jpg`, `kurs.jpg` — landing skrinshotlaringizdan **faqat qurilma ekrani** qismi kesib olingan (telefon ichida yana telefon ko'rinmasligi uchun). Yangi rasm qo'ysangiz, ham faqat ekran qismini qo'ying.
 
@@ -69,8 +69,8 @@ Shisha (blur) effekti tufayli render bir necha daqiqa davom etadi (4 yadroli kom
 Hamma narsa bitta faylda: **`src/config.ts`**
 
 - `hook`, `problem`, `turn`, `services`, `projects`, `workflow`, `cta` — barcha matnlar, telefon raqami, Instagram nomi
-- `audio.musicStartSeconds` — musiqani nechanchi soniyadan boshlash (masalan, trekning "drop" joyidan)
-- `audio.musicVolume` — musiqa balandligi
+- `audio.musicEnabled` — fon musiqasini yoqish/o'chirish (hozir o'chirilgan)
+- `audio.sfxVolume` — animatsiya ovozlari balandligi
 - `colors` — ranglar
 - `scenes` va pastdagi konstantalar — har bir sahna va animatsiya qaysi kadrda boshlanishi (30 kadr = 1 soniya). Ovoz effektlari shu qiymatlardan hisoblanadi, shuning uchun vaqtni o'zgartirsangiz ovoz ham o'zi siljiydi.
 
@@ -83,7 +83,7 @@ src/
   config.ts                  matnlar, rasmlar, ovozlar, ranglar, vaqtlar
   Root.tsx                   "Reel" kompozitsiyasi (1080×1920)
   Reel.tsx                   sahnalar ketma-ketligi
-  SoundDesign.tsx            musiqa va ovoz effektlari
+  SoundDesign.tsx            animatsiya ovozlari (va o'chirilgan fon musiqasi)
   scenes/                    Hook, Problem, Turn, Services, Projects, Workflow, Cta
   components/                fon, shisha panel/yozuv (Glass.tsx), telefon maketi, chaqnash, savdo paneli namunasi
   fx.ts                      silkinish, spring, glow yordamchilari

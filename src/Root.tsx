@@ -1,13 +1,13 @@
 import React from 'react';
 import {Composition} from 'remotion';
 import {Reel, type ReelProps} from './Reel';
-import {asset} from './assets';
+import {audioAsset} from './assets';
 import {DURATION, FPS, HEIGHT, WIDTH, audio} from './config';
 
 /** Brauzerda audio fayl uzunligini o'qiydi (fayl bo'lmasa — null) */
 const getAudioSeconds = (file: string) =>
   new Promise<number | null>((resolve) => {
-    const src = asset(file);
+    const src = audioAsset(file);
     if (!src) return resolve(null);
     const el = document.createElement('audio');
     const done = (v: number | null) => resolve(v !== null && Number.isFinite(v) ? v : null);

@@ -12,9 +12,14 @@ const files = [
 let missing = 0;
 for (const file of files) {
   const ok = existsSync(join('public', file));
-  if (!ok) missing++;
-  const note = !ok && file === 'savdo.jpg' ? '  (hozircha o‘rniga chizilgan savdo paneli ko‘rsatiladi)' : '';
-  console.log(`${ok ? '✔' : '✘'}  public/${file}${note}`);
+  const demo = !ok && /\.(mp3|wav|m4a|aac)$/.test(file) && existsSync(join('public', 'demo', file));
+  if (!ok && !demo) missing++;
+  const note = demo
+    ? '  (hozircha demo ovoz ishlatiladi: public/demo/' + file + ')'
+    : !ok && file === 'savdo.jpg'
+      ? '  (hozircha o‘rniga chizilgan savdo paneli ko‘rsatiladi)'
+      : '';
+  console.log(`${ok ? '✔' : demo ? '~' : '✘'}  public/${file}${note}`);
 }
 
 console.log(

@@ -129,7 +129,9 @@ export const audio = {
   music: 'music.mp3',
   /** Musiqani nechanchi soniyadan boshlash (masalan, "drop" joyidan) */
   musicStartSeconds: 0,
-  musicVolume: 0.6,
+  musicVolume: 0.5,
+  /** Barcha ovoz effektlarining umumiy balandligi */
+  sfxVolume: 0.72,
   whoosh: 'sfx/whoosh.mp3',
   impact: 'sfx/impact.mp3',
   riser: 'sfx/riser.mp3',

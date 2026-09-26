@@ -32,6 +32,16 @@ public/
   sfx/whoosh.mp3, sfx/impact.mp3, sfx/riser.mp3, sfx/pop.mp3
 ```
 
+### Ovoz: sizning fayllaringiz va demo ovozlar
+
+`public/demo/` da demo ovozlar bor: energik 128 BPM musiqa (aniq 60 soniya) va whoosh, impact, riser, pop effektlari. Ularni kod bilan sintez qilib yaratganman — original, hech kimning musiqasi emas, litsenziya muammosi yo'q.
+
+- `public/music.mp3` yoki `public/sfx/*.mp3` **bo'lmasa**, video avtomatik `public/demo/` dagisini ishlatadi.
+- O'z faylingizni (masalan, "Energetic Highway" ni `public/music.mp3` qilib) qo'ysangiz, **sizniki ishlatiladi**.
+
+Zarba (impact) paytida musiqa bir lahzaga pasayadi — zarba aniqroq eshitiladi va ovoz "kesilib" qolmaydi.
+Balandlikni `src/config.ts` dagi `audio.musicVolume` va `audio.sfxVolume` bilan sozlang.
+
 `ai.jpg`, `kafe.jpg`, `kurs.jpg` — landing skrinshotlaringizdan **faqat qurilma ekrani** qismi kesib olingan (telefon ichida yana telefon ko'rinmasligi uchun). Yangi rasm qo'ysangiz, ham faqat ekran qismini qo'ying.
 
 Nima yetishmayotganini tekshirish:

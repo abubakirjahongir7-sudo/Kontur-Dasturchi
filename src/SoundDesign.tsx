@@ -1,7 +1,7 @@
 import React from 'react';
 import {Audio} from '@remotion/media';
 import {Sequence, interpolate} from 'remotion';
-import {asset} from './assets';
+import {audioAsset} from './assets';
 import {
   CTA_ARROW,
   CTA_BUTTON,
@@ -34,19 +34,32 @@ const Sfx: React.FC<{
   duration?: number;
   trimBefore?: number;
 }> = ({file, at, name, volume = 1, duration, trimBefore}) => {
-  const src = asset(file);
+  const src = audioAsset(file);
   if (!src) return null;
   return (
     <Sequence from={Math.max(0, at)} durationInFrames={duration} name={name} layout="none">
-      <Audio src={src} volume={volume} trimBefore={trimBefore} />
+      <Audio src={src} volume={volume * audio.sfxVolume} trimBefore={trimBefore} />
     </Sequence>
   );
 };
 
 const MAX_RISER_FRAMES = 60;
 
+/** Zarba paytida musiqa bir lahzaga pasayadi (ducking): impact aniqroq eshitiladi va ovoz kesilmaydi */
+const duckAt = (f: number, hits: number[]) => {
+  const since = Math.min(...hits.map((h) => (f >= h - 1 ? f - (h - 1) : Infinity)));
+  return since === Infinity ? 1 : interpolate(since, [0, 2, 16], [1, 0.4, 1], {extrapolateRight: 'clamp'});
+};
+
 export const SoundDesign: React.FC<{riserSeconds: number | null}> = ({riserSeconds}) => {
-  const music = asset(audio.music);
+  const music = audioAsset(audio.music);
+  const impacts = [
+    ...HOOK_WORDS,
+    scenes.problem.from + PROBLEM_TITLE,
+    scenes.problem.from + PROBLEM_SUBLINE,
+    scenes.turn.from + TURN_FLASH,
+    scenes.services.from + SERVICES_TAGLINE,
+  ];
   const turnFlash = scenes.turn.from + TURN_FLASH;
 
   // Riser eng baland nuqtasi aynan oq flashga to'g'ri kelishi uchun uning oxirini flashga tekislaymiz
@@ -66,20 +79,21 @@ export const SoundDesign: React.FC<{riserSeconds: number | null}> = ({riserSecon
             interpolate(f, [0, 5, DURATION - 45, DURATION], [0, audio.musicVolume, audio.musicVolume, 0], {
               extrapolateLeft: 'clamp',
               extrapolateRight: 'clamp',
-            })
+            }) * duckAt(f, impacts)
           }
         />
       ) : null}
 
       {/* 1. HOOK: chaqnash + har bir so'zga impact */}
-      <Sfx file={audio.whoosh} at={0} volume={0.6} name="whoosh (flash)" />
+      {/* whoosh eng baland nuqtasi oq chaqnashga to'g'ri kelishi uchun boshi biroz qirqiladi */}
+      <Sfx file={audio.whoosh} at={0} trimBefore={6} volume={0.5} name="whoosh (flash)" />
       {HOOK_WORDS.map((f, i) => (
-        <Sfx key={`hook-${i}`} file={audio.impact} at={f} name={`impact: so'z ${i + 1}`} />
+        <Sfx key={`hook-${i}`} file={audio.impact} at={f} volume={0.85} name={`impact: so'z ${i + 1}`} />
       ))}
 
       {/* 2. MUAMMO: sarlavha zarbasi + har bir kartaga whoosh */}
       <Sfx file={audio.whoosh} at={scenes.problem.from - 3} volume={0.7} name="whoosh → muammo" />
-      <Sfx file={audio.impact} at={scenes.problem.from + PROBLEM_TITLE} volume={0.85} name="impact: MUAMMO BORMI" />
+      <Sfx file={audio.impact} at={scenes.problem.from + PROBLEM_TITLE} volume={0.8} name="impact: MUAMMO BORMI" />
       {PROBLEM_CARDS.map((f, i) => (
         <Sfx key={`card-${i}`} file={audio.whoosh} at={scenes.problem.from + f - 2} name={`whoosh: karta ${i + 1}`} />
       ))}

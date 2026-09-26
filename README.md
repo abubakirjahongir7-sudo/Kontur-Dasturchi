@@ -64,6 +64,24 @@ npm run render   # out/reel.mp4
 
 Shisha (blur) effekti tufayli render bir necha daqiqa davom etadi (4 yadroli kompyuterda ~7 daqiqa).
 
+## QR kod (reklama uchun)
+
+Sayt havolasi uchun video bilan bir xil uslubdagi QR kod rasmlari `qr/` papkasida:
+
+| Fayl | O'lcham | Nima uchun |
+|---|---|---|
+| `qr/qr-kod.png` | 2400×2400 | Faqat QR — flayer, banner, vizitka, chop etish |
+| `qr/qr-post.png` | 1080×1350 | Instagram post |
+| `qr/qr-story.png` | 1080×1920 | Instagram story |
+
+Havola va yozuvlar: `src/config.ts` dagi `qr` bo'limi. O'zgartirgandan keyin rasmlarni qayta yaratish:
+
+```bash
+npm run qr
+```
+
+QR xatoni tuzatishning eng yuqori darajasida (H) — markazdagi "K" logo skanerlashga xalal bermaydi. Chop etishda QR kamida 2×2 sm bo'lsin va oq/och fonda qolsin.
+
 ## O'zgartirish
 
 Hamma narsa bitta faylda: **`src/config.ts`**

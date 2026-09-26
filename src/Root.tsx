@@ -1,6 +1,7 @@
 import React from 'react';
-import {Composition} from 'remotion';
+import {Composition, Folder, Still} from 'remotion';
 import {Reel, type ReelProps} from './Reel';
+import {QrPlain, QrPoster, type QrPosterProps} from './qr/QrPoster';
 import {audioAsset} from './assets';
 import {DURATION, FPS, HEIGHT, WIDTH, audio} from './config';
 
@@ -20,17 +21,36 @@ const getAudioSeconds = (file: string) =>
 
 export const RemotionRoot: React.FC = () => {
   return (
-    <Composition
-      id="Reel"
-      component={Reel}
-      durationInFrames={DURATION}
-      fps={FPS}
-      width={WIDTH}
-      height={HEIGHT}
-      defaultProps={{riserSeconds: null} satisfies ReelProps}
-      calculateMetadata={async ({props}) => ({
-        props: {...props, riserSeconds: await getAudioSeconds(audio.riser)},
-      })}
-    />
+    <>
+      <Composition
+        id="Reel"
+        component={Reel}
+        durationInFrames={DURATION}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{riserSeconds: null} satisfies ReelProps}
+        calculateMetadata={async ({props}) => ({
+          props: {...props, riserSeconds: await getAudioSeconds(audio.riser)},
+        })}
+      />
+      <Folder name="QR">
+        <Still
+          id="QrPost"
+          component={QrPoster}
+          width={1080}
+          height={1350}
+          defaultProps={{variant: 'post'} satisfies QrPosterProps}
+        />
+        <Still
+          id="QrStory"
+          component={QrPoster}
+          width={1080}
+          height={1920}
+          defaultProps={{variant: 'story'} satisfies QrPosterProps}
+        />
+        <Still id="QrCode" component={QrPlain} width={1200} height={1200} />
+      </Folder>
+    </>
   );
 };

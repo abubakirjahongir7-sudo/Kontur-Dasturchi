@@ -123,6 +123,18 @@ export const cta = {
   directHint: 'Direct’ga yozing!',
 };
 
+/** QR kod rasmlari (videodan alohida: `npm run qr`) */
+export const qr = {
+  url: 'https://frontend-production-9395.up.railway.app/',
+  /** QR ostida ko'rinadigan qisqa yozuv */
+  urlLabel: 'frontend-production-9395.up.railway.app',
+  label: 'SAYTIMIZ',
+  title: 'Skanerlang va saytga kiring',
+  subtitle: 'Telefon kamerasini QR kodga qarating',
+  /** QR markazidagi belgi */
+  logoLetter: 'K',
+};
+
 // ---------- OVOZ ----------
 
 export const audio = {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Img, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
-import {Card} from '../components/Card';
+import {GlassPanel, GlassText} from '../components/Glass';
 import {Flash} from '../components/Flash';
 import {asset} from '../assets';
 import {
@@ -137,27 +137,26 @@ export const Cta: React.FC = () => {
         <div
           style={{
             marginTop: 36,
+            display: 'flex',
+            gap: 24,
             fontSize: 86,
             fontWeight: 900,
             letterSpacing: -2,
-            textShadow: '0 8px 0 rgba(74,34,16,0.55)',
             ...brand,
           }}
         >
-          {cta.brandFirst} <span style={{color: colors.accent}}>{cta.brandSecond}</span>
+          <GlassText sheenOffset={-CTA_BRAND - 10}>{cta.brandFirst}</GlassText>
+          <GlassText variant="yellow" sheenOffset={-CTA_BRAND - 16}>
+            {cta.brandSecond}
+          </GlassText>
         </div>
 
-        <div
-          style={{
-            marginTop: 14,
-            fontSize: 52,
-            fontWeight: 800,
-            textShadow: '0 6px 0 rgba(74,34,16,0.45)',
-            ...tagline,
-          }}
+        <GlassText
+          sheenOffset={-CTA_TAGLINE - 12}
+          style={{marginTop: 14, fontSize: 54, fontWeight: 900, ...tagline}}
         >
           {cta.tagline}
-        </div>
+        </GlassText>
 
         {/* Sariq tugma */}
         <div style={{position: 'relative', marginTop: 44, ...button}}>
@@ -173,47 +172,61 @@ export const Cta: React.FC = () => {
               }}
             />
           ) : null}
-          <div
+          <GlassPanel
+            tint="yellow"
+            radius={70}
+            sheenOffset={-CTA_BUTTON - 6}
+            sheenPeriod={45}
             style={{
               width: 880,
               height: 140,
-              borderRadius: 70,
-              background: colors.accent,
-              color: '#2A1206',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 46,
-              fontWeight: 900,
-              boxShadow: `0 14px 0 #B8820F, 0 0 ${60 + bump * 400}px rgba(245,184,46,0.8)`,
+              background: 'linear-gradient(180deg, #FFDA6B, #F5B82E 55%, #E9A418)',
+              boxShadow: `0 14px 0 #B8820F, 0 0 ${60 + bump * 400}px rgba(245,184,46,0.8), inset 0 2px 1px rgba(255,255,255,0.7)`,
               transform: `scale(${1 + bump + breathe})`,
             }}
           >
-            {cta.button}
-          </div>
+            <div
+              style={{
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#2A1206',
+                fontSize: 46,
+                fontWeight: 900,
+              }}
+            >
+              {cta.button}
+            </div>
+          </GlassPanel>
         </div>
 
         {/* Telegram */}
-        <Card
-          style={{
-            marginTop: 52,
-            width: 880,
-            height: 116,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 22,
-            fontSize: 40,
-            fontWeight: 800,
-            ...telegram,
-          }}
+        <GlassPanel
+          sheenOffset={-CTA_TELEGRAM - 8}
+          sheenPeriod={120}
+          style={{marginTop: 52, width: 880, height: 116, ...telegram}}
         >
-          <TelegramIcon size={56} />
-          {cta.telegram}
-        </Card>
+          <div
+            style={{
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 22,
+              fontSize: 40,
+              fontWeight: 800,
+            }}
+          >
+            <TelegramIcon size={56} />
+            {cta.telegram}
+          </div>
+        </GlassPanel>
 
         {/* Instagram Direct */}
-        <Card
+        <GlassPanel
+          sheenOffset={-CTA_INSTAGRAM - 8}
+          sheenPeriod={120}
           style={{
             marginTop: 30,
             width: 880,
@@ -269,7 +282,7 @@ export const Cta: React.FC = () => {
             <PlaneIcon size={40} />
             {cta.directButton}
           </div>
-        </Card>
+        </GlassPanel>
 
         {/* Strelka va "Direct'ga yozing!" */}
         <div

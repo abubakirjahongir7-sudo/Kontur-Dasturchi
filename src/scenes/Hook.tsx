@@ -1,11 +1,12 @@
 import React from 'react';
 import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Flash} from '../components/Flash';
+import {GlassPanel, GlassText} from '../components/Glass';
 import {HOOK_FLASH, HOOK_WORDS, colors, hook} from '../config';
 import {hitGlow, punch, shake, slamScale} from '../fx';
 import {font} from '../theme';
 
-const MAX_TEXT_WIDTH = 940;
+const MAX_TEXT_WIDTH = 820;
 
 /** So'z o'lchamini eng uzun qatoriga qarab tanlaydi */
 const fontSizeFor = (lines: string[]) => {
@@ -40,26 +41,38 @@ const Word: React.FC<{text: string; start: number; end: number; last: boolean}> 
 
   return (
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
-      <div
-        style={{
-          transform: `scale(${scale * (1 + out * 0.9)})`,
-          opacity: Math.min(1, p * 2) * (1 - out),
-          filter: `blur(${blur + out * 10}px)`,
-          textAlign: 'center',
-          fontFamily: font,
-          fontWeight: 900,
-          fontSize: size,
-          lineHeight: 1.02,
-          letterSpacing: -size * 0.02,
-          color: colors.text,
-          textShadow: `0 0 ${30 + glow * 40}px rgba(245,184,46,${0.75 + glow * 0.25}), 0 0 ${
-            90 + glow * 80
-          }px rgba(245,184,46,0.55), 0 8px 0 rgba(0,0,0,0.25)`,
-        }}
-      >
-        {lines.map((l) => (
-          <div key={l}>{l}</div>
-        ))}
+      {/* opacity/filter faqat panelning o'zida: ota elementda bo'lsa backdrop blur ishlamaydi */}
+      <div style={{transform: `scale(${scale * (1 + out * 0.9)})`}}>
+        <GlassPanel
+          tint="light"
+          radius={56}
+          blur={26}
+          sheenOffset={-start - 6}
+          sheenPeriod={200}
+          style={{
+            opacity: Math.min(1, p * 2) * (1 - out),
+            filter: blur + out * 10 > 0.1 ? `blur(${blur + out * 10}px)` : undefined,
+          }}
+        >
+          <GlassText
+            glow={glow}
+            sheenOffset={-start - 10}
+            sheenPeriod={200}
+            style={{
+              padding: '44px 64px 52px',
+              textAlign: 'center',
+              fontFamily: font,
+              fontWeight: 900,
+              fontSize: size,
+              lineHeight: 1.02,
+              letterSpacing: -size * 0.02,
+            }}
+          >
+            {lines.map((l) => (
+              <div key={l}>{l}</div>
+            ))}
+          </GlassText>
+        </GlassPanel>
       </div>
     </AbsoluteFill>
   );

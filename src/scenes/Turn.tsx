@@ -1,6 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, interpolate, random, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Flash} from '../components/Flash';
+import {GlassPanel, GlassText} from '../components/Glass';
 import {TURN_FLASH, colors, turn} from '../config';
 import {hitGlow, punch, shake, slamScale} from '../fx';
 import {font} from '../theme';
@@ -73,25 +74,35 @@ export const Turn: React.FC = () => {
         <AbsoluteFill
           style={{alignItems: 'center', justifyContent: 'center', transform: `translate(${sx}px, ${sy}px)`}}
         >
-          <div
-            style={{
-              transform: `scale(${scale}) translateY(${-exit * 260}px)`,
-              opacity: Math.min(1, p * 3) * (1 - exit),
-              textAlign: 'center',
-              fontFamily: font,
-              fontWeight: 900,
-              fontSize: 190,
-              lineHeight: 1.0,
-              letterSpacing: -4,
-              color: colors.accent,
-              textShadow: `0 12px 0 rgba(74,34,16,0.8), 0 0 ${60 + glow * 60}px rgba(255,214,120,${
-                0.6 + glow * 0.4
-              })`,
-            }}
-          >
-            {turn.text.split(' ').map((w) => (
-              <div key={w}>{w}</div>
-            ))}
+          <div style={{transform: `scale(${scale}) translateY(${-exit * 260}px)`}}>
+            <GlassPanel
+              tint="brown"
+              radius={60}
+              blur={26}
+              sheenOffset={-TURN_FLASH - 8}
+              sheenPeriod={120}
+              style={{opacity: Math.min(1, p * 3) * (1 - exit)}}
+            >
+              <GlassText
+                variant="yellow"
+                glow={glow}
+                sheenOffset={-TURN_FLASH - 12}
+                sheenPeriod={120}
+                style={{
+                  padding: '50px 70px 60px',
+                  textAlign: 'center',
+                  fontFamily: font,
+                  fontWeight: 900,
+                  fontSize: 180,
+                  lineHeight: 1.0,
+                  letterSpacing: -4,
+                }}
+              >
+                {turn.text.split(' ').map((w) => (
+                  <div key={w}>{w}</div>
+                ))}
+              </GlassText>
+            </GlassPanel>
           </div>
         </AbsoluteFill>
       ) : null}

@@ -5,7 +5,9 @@ import {Cta} from './scenes/Cta';
 import {Hook} from './scenes/Hook';
 import {Problem} from './scenes/Problem';
 import {Projects} from './scenes/Projects';
+import {Services} from './scenes/Services';
 import {Turn} from './scenes/Turn';
+import {Workflow} from './scenes/Workflow';
 import {SoundDesign} from './SoundDesign';
 import {scenes} from './config';
 
@@ -14,25 +16,25 @@ export type ReelProps = {
   riserSeconds: number | null;
 };
 
+const timeline = [
+  {key: 'hook', name: '1. Hook', scene: scenes.hook, Component: Hook},
+  {key: 'problem', name: '2. Muammo', scene: scenes.problem, Component: Problem},
+  {key: 'turn', name: '3. Burilish', scene: scenes.turn, Component: Turn},
+  {key: 'services', name: '4. Xizmatlar', scene: scenes.services, Component: Services},
+  {key: 'projects', name: '5. Loyihalar', scene: scenes.projects, Component: Projects},
+  {key: 'workflow', name: '6. Jarayon', scene: scenes.workflow, Component: Workflow},
+  {key: 'cta', name: '7. CTA', scene: scenes.cta, Component: Cta},
+];
+
 export const Reel: React.FC<ReelProps> = ({riserSeconds}) => {
   return (
     <AbsoluteFill>
       <OrangeBackground />
-      <Sequence from={scenes.hook.from} durationInFrames={scenes.hook.duration} name="1. Hook">
-        <Hook />
-      </Sequence>
-      <Sequence from={scenes.problem.from} durationInFrames={scenes.problem.duration} name="2. Muammo">
-        <Problem />
-      </Sequence>
-      <Sequence from={scenes.turn.from} durationInFrames={scenes.turn.duration} name="3. Burilish">
-        <Turn />
-      </Sequence>
-      <Sequence from={scenes.projects.from} durationInFrames={scenes.projects.duration} name="4. Loyihalar">
-        <Projects />
-      </Sequence>
-      <Sequence from={scenes.cta.from} durationInFrames={scenes.cta.duration} name="5. CTA">
-        <Cta />
-      </Sequence>
+      {timeline.map(({key, name, scene, Component}) => (
+        <Sequence key={key} from={scene.from} durationInFrames={scene.duration} name={name}>
+          <Component />
+        </Sequence>
+      ))}
       <SoundDesign riserSeconds={riserSeconds} />
     </AbsoluteFill>
   );

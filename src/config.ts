@@ -4,7 +4,7 @@
 export const FPS = 30;
 export const WIDTH = 1080;
 export const HEIGHT = 1920;
-export const DURATION = 24 * FPS; // 720 kadr
+export const DURATION = 60 * FPS; // 1 daqiqa = 1800 kadr
 
 // ---------- MATNLAR ----------
 
@@ -17,11 +17,27 @@ export const hook = {
 export const problem = {
   title: 'MUAMMO BORMI?',
   cards: ['Biznesingizda?', 'O‘quv kursingizda?', 'Hisob-kitobda?'],
+  subline: 'Vaqt va pul behuda ketyaptimi?',
 };
 
 /** 3. BURILISH */
 export const turn = {
   text: 'YECHIM BIZDA!',
+};
+
+export type ServiceIcon = 'web' | 'bot' | 'app' | 'ai';
+
+/** 4. XIZMATLAR */
+export const services = {
+  label: 'XIZMATLARIMIZ',
+  title: 'Biz siz uchun nima qila olamiz',
+  items: [
+    {icon: 'web', title: 'Veb-sayt', desc: 'Landing va biznes saytlar'},
+    {icon: 'bot', title: 'Telegram bot', desc: 'Buyurtma va mijozlar'},
+    {icon: 'app', title: 'Web App', desc: 'Biznes uchun tizimlar'},
+    {icon: 'ai', title: 'AI integratsiya', desc: 'Avtomatlashtirish'},
+  ] as {icon: ServiceIcon; title: string; desc: string}[],
+  tagline: 'G‘oyadan — tayyor mahsulotgacha',
 };
 
 export type ScreenFit = 'cover' | 'width';
@@ -30,6 +46,8 @@ export type Project = {
   /** public/ ichidagi rasm — faqat telefon ekranidagi qism (ramkasiz) */
   image: string;
   title: string;
+  desc: string;
+  tags: string[];
   /**
    * cover — rasm ekranni to'liq qoplaydi (foto va telefon skrinshotlari uchun);
    * width — rasm eni bo'yicha joylashadi, qolgan joy `screenBg` rangida bo'ladi
@@ -41,19 +59,57 @@ export type Project = {
   fallback?: 'savdo';
 };
 
-/** 4. LOYIHALAR */
+/** 5. LOYIHALAR */
 export const projects: {label: string; items: Project[]} = {
   label: 'LOYIHALARIMIZ',
   items: [
-    {image: 'ai.jpg', title: 'AI integratsiya', fit: 'cover'},
-    {image: 'kafe.jpg', title: 'Kafe tizimi', fit: 'cover'},
-    {image: 'kurs.jpg', title: 'O‘quv kurs sayti', fit: 'width', screenBg: '#0E1522'},
-    // savdo.jpg hali yo'q bo'lsa, o'rniga chizilgan savdo paneli ko'rsatiladi
-    {image: 'savdo.jpg', title: 'Savdo tizimi', fit: 'cover', fallback: 'savdo'},
+    {
+      image: 'ai.jpg',
+      title: 'AI integratsiya',
+      desc: 'Barcha tizimlarni AI bilan integratsiyalash',
+      tags: ['AI chat-bot', 'Avtomatlashtirish', '24/7'],
+      fit: 'cover',
+    },
+    {
+      image: 'kafe.jpg',
+      title: 'Kafe tizimi',
+      desc: 'Kafe biznesingizni professional tizimlashtirish',
+      tags: ['Elektron menyu', 'Buyurtmalar', 'Mobil'],
+      fit: 'cover',
+    },
+    {
+      image: 'kurs.jpg',
+      title: 'O‘quv kurs sayti',
+      desc: 'O‘quv kursingizni professional darajada tizimlashtirish',
+      tags: ['Ro‘yxatdan o‘tish', 'Kurslar', 'Arizalar'],
+      fit: 'width',
+      screenBg: '#0E1522',
+    },
+    {
+      // savdo.jpg hali yo'q bo'lsa, o'rniga chizilgan savdo paneli ko'rsatiladi
+      image: 'savdo.jpg',
+      title: 'Savdo tizimi',
+      desc: 'Savdo va hisob-kitobni avtomatlashtirish',
+      tags: ['Buyurtmalar', 'Hisobotlar', 'Ozon'],
+      fit: 'cover',
+      fallback: 'savdo',
+    },
   ],
 };
 
-/** 5. CTA */
+/** 6. JARAYON (qanday ishlaymiz) */
+export const workflow = {
+  label: 'QANDAY ISHLAYMIZ?',
+  title: '4 qadamda tayyor',
+  steps: [
+    {title: 'Bepul konsultatsiya', desc: '15 daqiqada muammoga yechim'},
+    {title: 'G‘oya va dizayn', desc: 'Biznesingizga mos reja'},
+    {title: 'Ishlab chiqish', desc: 'Sayt, bot yoki web app'},
+    {title: 'Ishga tushirish', desc: 'Natija va qo‘llab-quvvatlash'},
+  ],
+};
+
+/** 7. CTA */
 export const cta = {
   brandFirst: 'Kontur',
   brandSecond: 'Dasturchi',
@@ -86,7 +142,6 @@ export const colors = {
   orange: '#E8651A',
   orangeDeep: '#B8420C',
   card: '#4A2210',
-  cardBorder: 'rgba(255, 214, 150, 0.22)',
   accent: '#F5B82E',
   text: '#FFFFFF',
   dark: '#120702',
@@ -96,32 +151,47 @@ export const colors = {
 // ---------- VAQTLAR (kadrlarda, 30 kadr = 1 soniya) ----------
 
 export const scenes = {
-  hook: {from: 0, duration: 90}, // 0–3s
-  problem: {from: 90, duration: 150}, // 3–8s
-  turn: {from: 240, duration: 45}, // 8–9.5s
-  projects: {from: 285, duration: 285}, // 9.5–19s
-  cta: {from: 570, duration: 150}, // 19–24s
+  hook: {from: 0, duration: 120}, // 0–4s
+  problem: {from: 120, duration: 210}, // 4–11s
+  turn: {from: 330, duration: 60}, // 11–13s
+  services: {from: 390, duration: 240}, // 13–21s
+  projects: {from: 630, duration: 600}, // 21–41s
+  workflow: {from: 1230, duration: 300}, // 41–51s
+  cta: {from: 1530, duration: 270}, // 51–60s
 };
 
 // Sahnalar ichidagi lahzalar (har biri o'z sahnasi boshidan hisoblanadi)
 export const HOOK_FLASH = 4;
-export const HOOK_WORDS = [10, 36, 62];
+export const HOOK_WORDS = [10, 44, 78];
 
 export const PROBLEM_TITLE = 4;
-export const PROBLEM_CARDS = [40, 64, 88];
+export const PROBLEM_CARDS = [44, 74, 104];
+export const PROBLEM_SUBLINE = 140;
 
-export const TURN_FLASH = 18;
+export const TURN_FLASH = 26;
+
+export const SERVICES_TITLE = 4;
+export const SERVICES_ITEMS = [40, 62, 84, 106];
+export const SERVICES_TAGLINE = 150;
 
 export const PROJECT_STARTS = projects.items.map((_, i) =>
   Math.round((scenes.projects.duration / projects.items.length) * i),
 );
+/** Loyiha sahnasi ichida: tavsif paneli va teglar qachon chiqadi */
+export const PROJECT_CAPTION = 18;
+export const PROJECT_TAGS = [34, 42, 50];
+
+export const WORKFLOW_TITLE = 4;
+export const WORKFLOW_STEPS = [36, 84, 132, 180];
+/** Qadamlarga "✓" belgisi qo'yiladigan kadrlar */
+export const WORKFLOW_CHECKS = [228, 238, 248, 258];
 
 export const CTA_AVATAR = 0;
 export const CTA_BRAND = 6;
 export const CTA_TAGLINE = 14;
-export const CTA_BUTTON = 24;
-export const CTA_TELEGRAM = 40;
-export const CTA_INSTAGRAM = 54;
-export const CTA_ARROW = 66;
+export const CTA_BUTTON = 26;
+export const CTA_TELEGRAM = 44;
+export const CTA_INSTAGRAM = 60;
+export const CTA_ARROW = 76;
 /** Tugma shu kadrlarda "puls" qiladi (har biriga pop) */
-export const CTA_PULSES = [80, 110, 140];
+export const CTA_PULSES = [100, 145, 190, 235];

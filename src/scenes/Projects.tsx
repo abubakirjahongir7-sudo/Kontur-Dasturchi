@@ -1,12 +1,14 @@
 import React from 'react';
 import {AbsoluteFill, Sequence, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {GlassPanel, GlassText} from '../components/Glass';
 import {PHONE_H, PHONE_W, Phone} from '../components/Phone';
 import {SavdoMock} from '../components/SavdoMock';
-import {PROJECT_STARTS, colors, projects, type Project} from '../config';
+import {PROJECT_CAPTION, PROJECT_STARTS, PROJECT_TAGS, colors, projects, type Project} from '../config';
 import {punch, slamScale, snappy} from '../fx';
 import {font} from '../theme';
 
-const PHONE_TOP = 455;
+const PHONE_TOP = 385;
+const PHONE_SCALE = 0.88;
 const EXIT_FRAMES = 8;
 
 const Placeholder: React.FC<{project: Project}> = ({project}) =>
@@ -48,6 +50,7 @@ const ProjectSlide: React.FC<{project: Project; index: number}> = ({project, ind
   const sway = Math.sin(frame / 22) * 4 * enter;
 
   const t = punch(frame, fps, 3);
+  const cap = punch(frame, fps, PROJECT_CAPTION);
   const titleOut = interpolate(frame, [durationInFrames - 6, durationInFrames], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
@@ -59,21 +62,22 @@ const ProjectSlide: React.FC<{project: Project; index: number}> = ({project, ind
       <div
         style={{
           position: 'absolute',
-          top: 300,
+          top: 286,
           left: 40,
           right: 40,
-          textAlign: 'center',
-          fontFamily: font,
-          fontWeight: 900,
-          fontSize: 84,
-          lineHeight: 1.05,
-          color: colors.accent,
-          textShadow: '0 8px 0 rgba(74,34,16,0.6), 0 0 40px rgba(255,210,120,0.45)',
-          transform: `translateY(${(1 - t) * 90 - titleOut * 70}px) scale(${slamScale(t, 1.4)})`,
+          display: 'flex',
+          justifyContent: 'center',
+          transform: `translateY(${(1 - Math.min(t, 1)) * 90 - titleOut * 70}px) scale(${slamScale(t, 1.4)})`,
           opacity: Math.min(1, t * 2) * (1 - titleOut),
         }}
       >
-        {project.title}
+        <GlassText
+          variant="yellow"
+          sheenOffset={-14}
+          style={{fontFamily: font, fontWeight: 900, fontSize: 84, lineHeight: 1.05, textAlign: 'center'}}
+        >
+          {project.title}
+        </GlassText>
       </div>
 
       {/* Telefon orqasidagi nur */}
@@ -100,13 +104,65 @@ const ProjectSlide: React.FC<{project: Project; index: number}> = ({project, ind
       >
         <div
           style={{
-            transform: `translateX(${x}px) translateY(${float}px) rotateY(${rotateY + sway}deg) rotateZ(${rotateZ}deg) scale(${scale})`,
+            transform: `translateX(${x}px) translateY(${float}px) rotateY(${rotateY + sway}deg) rotateZ(${rotateZ}deg) scale(${scale * PHONE_SCALE})`,
             opacity: Math.min(1, enter * 2.5) * (1 - exit),
           }}
         >
           <Phone project={project} fallback={<Placeholder project={project} />} />
         </div>
       </div>
+
+      {/* Telefon ustiga tushadigan shisha tavsif paneli */}
+      {frame >= PROJECT_CAPTION ? (
+        <div
+          style={{
+            position: 'absolute',
+            top: 1236,
+            left: 70,
+            right: 70,
+            transform: `translateY(${(1 - Math.min(cap, 1)) * 140 - exit * 60}px) scale(${slamScale(cap, 0.7)})`,
+          }}
+        >
+          <GlassPanel
+            radius={36}
+            sheenOffset={-PROJECT_CAPTION - 10}
+            sheenPeriod={140}
+            style={{opacity: Math.min(1, cap * 2.5) * (1 - exit), padding: '30px 36px 32px'}}
+          >
+            <div style={{fontFamily: font, fontWeight: 800, fontSize: 40, lineHeight: 1.2, color: colors.text}}>
+              {project.desc}
+            </div>
+            <div style={{display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 22}}>
+              {project.tags.map((tag, i) => {
+                const c = punch(frame, fps, PROJECT_TAGS[i] ?? PROJECT_TAGS[PROJECT_TAGS.length - 1]);
+                if (c <= 0) return null;
+                return (
+                  <div key={tag} style={{transform: `scale(${slamScale(c, 0.2)})`}}>
+                    <GlassPanel
+                      tint={i === 0 ? 'yellow' : 'light'}
+                      radius={999}
+                      blur={8}
+                      sheenOffset={-(PROJECT_TAGS[i] ?? 0) - 4}
+                      style={{opacity: Math.min(1, c * 2), padding: '12px 26px'}}
+                    >
+                      <div
+                        style={{
+                          fontFamily: font,
+                          fontWeight: 800,
+                          fontSize: 30,
+                          color: i === 0 ? '#2A1206' : colors.text,
+                        }}
+                      >
+                        {tag}
+                      </div>
+                    </GlassPanel>
+                  </div>
+                );
+              })}
+            </div>
+          </GlassPanel>
+        </div>
+      ) : null}
     </AbsoluteFill>
   );
 };

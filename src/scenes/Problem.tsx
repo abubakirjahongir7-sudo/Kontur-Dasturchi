@@ -1,13 +1,13 @@
 import React from 'react';
 import {AbsoluteFill, interpolate, random, useCurrentFrame, useVideoConfig} from 'remotion';
-import {Card} from '../components/Card';
-import {PROBLEM_CARDS, PROBLEM_TITLE, colors, problem} from '../config';
+import {GlassPanel, GlassText} from '../components/Glass';
+import {PROBLEM_CARDS, PROBLEM_SUBLINE, PROBLEM_TITLE, colors, problem} from '../config';
 import {punch, shake, slamScale, snappy} from '../fx';
 import {font} from '../theme';
 
 const GLITCH_FRAMES = 14;
 const CARD_W = 900;
-const CARD_H = 170;
+const CARD_H = 160;
 
 const AlertIcon: React.FC = () => (
   <div
@@ -68,8 +68,13 @@ const GlitchCard: React.FC<{text: string; start: number; index: number}> = ({tex
   const jitter = glitching ? rnd('j') * 40 * intensity : 0;
   const split = glitching ? 8 + Math.abs(rnd('s')) * 22 * intensity : 0;
 
-  const card = (content: React.ReactNode, extra?: React.CSSProperties) => (
-    <Card style={{position: 'absolute', inset: 0, overflow: 'hidden', ...extra}}>{content}</Card>
+  const card = (content: React.ReactNode, settled = false) => (
+    <GlassPanel style={{position: 'absolute', inset: 0}} sheenOffset={-start - 16 - index * 4}>
+      {settled ? (
+        <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: 8, background: colors.danger}} />
+      ) : null}
+      {content}
+    </GlassPanel>
   );
 
   return (
@@ -116,9 +121,7 @@ const GlitchCard: React.FC<{text: string; start: number; index: number}> = ({tex
           />
         </>
       ) : (
-        card(<CardBody text={text} />, {
-          boxShadow: `0 24px 60px rgba(60,16,0,0.45), inset 6px 0 0 ${colors.danger}`,
-        })
+        card(<CardBody text={text} />, true)
       )}
     </div>
   );
@@ -131,11 +134,12 @@ export const Problem: React.FC = () => {
   const t = punch(frame, fps, PROBLEM_TITLE);
   const titleScale = slamScale(t, 2.6);
 
-  const s1 = shake(frame, [PROBLEM_TITLE], 30, 12);
+  const sub = punch(frame, fps, PROBLEM_SUBLINE);
+  const s1 = shake(frame, [PROBLEM_TITLE, PROBLEM_SUBLINE], 30, 12);
   const s2 = shake(frame, PROBLEM_CARDS, 14, 8);
 
   // Oxirida (riser paytida) sahna kattalashib, kuchli silkinadi
-  const build = interpolate(frame, [durationInFrames - 16, durationInFrames], [0, 1], {
+  const build = interpolate(frame, [durationInFrames - 20, durationInFrames], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -158,59 +162,79 @@ export const Problem: React.FC = () => {
       <div
         style={{
           position: 'absolute',
-          top: 330,
+          top: 290,
           left: 0,
           right: 0,
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          fontFamily: font,
-          fontWeight: 900,
-          fontSize: 170,
-          lineHeight: 1.0,
-          letterSpacing: -4,
-          color: colors.text,
-          textShadow: '0 10px 0 rgba(74,34,16,0.55), 0 0 60px rgba(90,20,0,0.35)',
+          justifyContent: 'center',
           transform: `scale(${titleScale})`,
           opacity: Math.min(1, t * 2),
         }}
       >
-        <div>{word1}</div>
-        <div style={{display: 'flex', alignItems: 'baseline'}}>
-          {rest.join(' ')}
-          {hasQuestion ? (
-            <span
-              style={{
-                display: 'inline-block',
-                color: colors.accent,
-                transform: `rotate(${wobble}deg) scale(${qScale})`,
-                transformOrigin: '50% 85%',
-                marginLeft: 8,
-                textShadow: '0 10px 0 rgba(74,34,16,0.55), 0 0 50px rgba(245,184,46,0.8)',
-              }}
-            >
-              ?
-            </span>
-          ) : null}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            fontFamily: font,
+            fontWeight: 900,
+            fontSize: 170,
+            lineHeight: 1.0,
+            letterSpacing: -4,
+          }}
+        >
+          <GlassText sheenOffset={-PROBLEM_TITLE - 12}>{word1}</GlassText>
+          <div style={{display: 'flex', alignItems: 'baseline'}}>
+            <GlassText sheenOffset={-PROBLEM_TITLE - 16}>{rest.join(' ')}</GlassText>
+            {hasQuestion ? (
+              <GlassText
+                variant="yellow"
+                glow={0.6}
+                style={{
+                  display: 'inline-block',
+                  transform: `rotate(${wobble}deg) scale(${qScale})`,
+                  transformOrigin: '50% 85%',
+                  marginLeft: 8,
+                }}
+              >
+                ?
+              </GlassText>
+            ) : null}
+          </div>
         </div>
       </div>
 
       <div
         style={{
           position: 'absolute',
-          top: 860,
+          top: 770,
           left: 0,
           right: 0,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: 44,
+          gap: 36,
         }}
       >
         {problem.cards.map((text, i) => (
           <GlitchCard key={text} text={text} start={PROBLEM_CARDS[i]} index={i} />
         ))}
       </div>
+
+      {frame >= PROBLEM_SUBLINE ? (
+        <div style={{position: 'absolute', top: 1380, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+          <div style={{transform: `scale(${slamScale(sub, 0.4)})`}}>
+            <GlassPanel
+              tint="yellow"
+              radius={999}
+              sheenOffset={-PROBLEM_SUBLINE - 8}
+              style={{opacity: Math.min(1, sub * 2), padding: '26px 52px'}}
+            >
+              <div style={{fontFamily: font, fontWeight: 800, fontSize: 46, color: '#2A1206'}}>{problem.subline}</div>
+            </GlassPanel>
+          </div>
+        </div>
+      ) : null}
 
       <AbsoluteFill style={{backgroundColor: colors.dark, opacity: build * 0.55}} />
     </AbsoluteFill>

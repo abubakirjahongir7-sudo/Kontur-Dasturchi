@@ -37,7 +37,7 @@ export const SavdoMock: React.FC = () => {
           background: colors.card,
           borderRadius: 28,
           padding: 28,
-          border: `2px solid ${colors.cardBorder}`,
+          border: '2px solid rgba(255, 214, 150, 0.22)',
         }}
       >
         <div style={{fontSize: 22, opacity: 0.7, fontWeight: 600}}>Bugungi buyurtmalar</div>

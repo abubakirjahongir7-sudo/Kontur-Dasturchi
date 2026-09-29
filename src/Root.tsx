@@ -1,7 +1,7 @@
 import React from 'react';
 import {Composition, Folder, Still} from 'remotion';
 import {Reel, type ReelProps} from './Reel';
-import {Kinetik} from './kinetik/Kinetik';
+import {Kinetik, type KinetikProps} from './kinetik/Kinetik';
 import * as kinetik from './kinetik/config';
 import {QrPlain, QrPoster, type QrPosterProps} from './qr/QrPoster';
 import {audioAsset} from './assets';
@@ -43,6 +43,14 @@ export const RemotionRoot: React.FC = () => {
         fps={kinetik.FPS}
         width={kinetik.WIDTH}
         height={kinetik.HEIGHT}
+        defaultProps={{riserSeconds: null, buildupSeconds: null} satisfies KinetikProps}
+        calculateMetadata={async ({props}) => ({
+          props: {
+            ...props,
+            riserSeconds: await getAudioSeconds(kinetik.audio.riser),
+            buildupSeconds: await getAudioSeconds(kinetik.audio.buildup),
+          },
+        })}
       />
       <Folder name="QR">
         <Still

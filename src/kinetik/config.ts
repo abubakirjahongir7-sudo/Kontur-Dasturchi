@@ -169,9 +169,25 @@ export const fix = {
 
 // ---------- OVOZ ----------
 
+/**
+ * Ovoz effektlari. Avval public/<fayl> qidiriladi (sizning ovozingiz), bo'lmasa
+ * public/demo/<fayl> dagi demo ovoz ishlatiladi (scripts/make-kinetik-sfx.py sintez qilgan).
+ * O'z faylingizni qo'yish uchun: masalan, public/sfx/kinetik/drop.mp3
+ */
 export const audio = {
+  /** Barcha effektlarning umumiy balandligi */
   sfxVolume: 0.9,
-  whoosh: 'sfx/whoosh.mp3',
-  impact: 'sfx/impact.mp3',
-  pop: 'sfx/pop.mp3',
+  riser: 'sfx/kinetik/suspense-riser.mp3',
+  drop: 'sfx/kinetik/drop.mp3',
+  pop: 'sfx/kinetik/soft-ui-pop.mp3',
+  boom: 'sfx/kinetik/shutter-soft-boom.mp3',
+  slice: 'sfx/kinetik/slice-ring.mp3',
+  counter: 'sfx/kinetik/digital-counter.mp3',
+  click: 'sfx/kinetik/ui-click.mp3',
+  buildup: 'sfx/kinetik/buildup.mp3',
+  netflix: 'sfx/kinetik/netflix.mp3',
+  /** "netflix" dagi ikkinchi zarba ("dum") birinchisidan necha kadr keyin keladi */
+  netflixSecondHit: 9,
+  /** "digital-counter" oxiridagi "ding" fayl boshidan necha kadr keyin */
+  counterDing: 23,
 };

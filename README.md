@@ -89,7 +89,25 @@ Pinterest'dagi namuna uslubida qilingan qisqa reel. U alohida kompozitsiya, yuqo
 npm run render:kinetik   # out/kinetik.mp4 (~1–2 daqiqa)
 ```
 
-Matnlar, vaqtlar, profil ma'lumotlari: **`src/kinetik/config.ts`**. Emoji rasmlari `public/kinetik/` da (Noto Color Emoji shriftidan olingan, SIL OFL 1.1 litsenziyasi). Ovoz effektlari asosiy video bilan umumiy (`public/sfx/` yoki demo ovozlar).
+Matnlar, vaqtlar, profil ma'lumotlari: **`src/kinetik/config.ts`**. Emoji rasmlari `public/kinetik/` da (Noto Color Emoji shriftidan olingan, SIL OFL 1.1 litsenziyasi).
+
+### Kinetik: ovoz effektlari
+
+| Ovoz | Fayl nomi | Qayerda |
+|---|---|---|
+| Suspense Riser | `suspense-riser.mp3` | 3–4-sahna: "Chunki tizimsiz…" dan "tartibsizlik" gacha ko'tariladi |
+| Drop | `drop.mp3` | "tartibsizlik" 🤡 |
+| Soft UI pop | `soft-ui-pop.mp3` | Har bir qizil so'z, oq doira, emojilar, profil, brend |
+| Shutter soft boom | `shutter-soft-boom.mp3` | "o‘smayapti", pushti doira, profil kartochkasi |
+| Slice Ring | `slice-ring.mp3` | Sahna o'tishlari (xiralashib almashish) |
+| Digital Counter | `digital-counter.mp3` | Uchayotgan pullar, "ding" — "daromad" so'zida |
+| UI click | `ui-click.mp3` | Lampochka yoqilishi, knopka, ro'yxat bandlari, klaviatura |
+| Buildup | `buildup.mp3` | 11–12-sahna: yakuniy zarbaga olib boradi |
+| Netflix | `netflix.mp3` | "**tizimni** biz quramiz" — ikki zarbali "ta-dum" |
+
+Hozirgi ovozlar `public/demo/sfx/kinetik/` da. Ularni `scripts/make-kinetik-sfx.py` kod bilan sintez qilgan, shuning uchun original va litsenziya muammosi yo'q. "Netflix" ham faqat shu uslubdagi original zarba: Netflix'ning asl ovozi mualliflik huquqi bilan himoyalangan.
+
+**O'z ovozlaringizni qo'yish** (masalan, CapCut'dan): faylni jadvaldagi nom bilan **`public/sfx/kinetik/`** ga qo'ying. Video demo o'rniga avtomatik sizning faylingizni oladi. Riser va Buildup uzunligi avtomatik o'qiladi va eng baland nuqtasi aynan zarbaga tushadi. Balandlik: `config.ts` dagi `audio.sfxVolume`.
 
 ## QR kod (reklama uchun)
 

@@ -3,11 +3,13 @@
 import {existsSync, readFileSync} from 'node:fs';
 import {join} from 'node:path';
 
-const config = readFileSync(new URL('../src/config.ts', import.meta.url), 'utf8');
+const config = ['../src/config.ts', '../src/kinetik/config.ts']
+  .map((f) => readFileSync(new URL(f, import.meta.url), 'utf8'))
+  .join('\n');
 const musicEnabled = /musicEnabled:\s*true/.test(config);
 const files = [
-  ...[...config.matchAll(/(?:image|avatar):\s*'([^']+)'/g)].map((m) => m[1]),
-  ...[...config.matchAll(/^\s*(\w+):\s*'((?:sfx\/)?[\w-]+\.(?:mp3|wav|m4a|aac))'/gm)]
+  ...new Set([...config.matchAll(/(?:image|avatar):\s*'([^']+)'/g)].map((m) => m[1])),
+  ...[...config.matchAll(/^\s*(\w+):\s*'((?:sfx\/(?:kinetik\/)?)?[\w-]+\.(?:mp3|wav|m4a|aac))'/gm)]
     .filter((m) => m[1] !== 'music' || musicEnabled)
     .map((m) => m[2]),
 ];

@@ -64,26 +64,26 @@ npm run render   # out/reel.mp4
 
 Shisha (blur) effekti tufayli render bir necha daqiqa davom etadi (4 yadroli kompyuterda ~7 daqiqa).
 
-## Ikkinchi video: "Kinetik" (22 soniya)
+## Ikkinchi video: "Kinetik" (30 soniya)
 
 Pinterest'dagi namuna uslubida qilingan qisqa reel. U alohida kompozitsiya, yuqoridagi 60 soniyalik `Reel` ga ta'sir qilmaydi.
-**1080×1920, 30 fps, 660 kadr.** Oq va qora sahnalar almashadi, so'zlar birma-bir xiralikdan chiqadi, kalit so'zlar katta va qizil.
+**1080×1920, 30 fps, 900 kadr.** Har bir sahnada oxirgi so'z chiqqandan keyin yozuv ~1,3 soniya turadi, shunda o'qib ulguriladi. Oq va qora sahnalar almashadi, so'zlar birma-bir xiralikdan chiqadi, kalit so'zlar katta va qizil.
 
 | № | Vaqt | Yozuv | Tasvir |
 |---|---|---|---|
-| 1 | 0–1,8s | Sizda **g‘oya** ham, **biznes** ham bor | Lampochka, shtrix-kod |
-| 2 | 1,8–3,6s | Lekin **savdo**-chi? … o‘smayapti | Rastr nuqtali kostyumli odam |
-| 3 | 3,6–5,4s | Chunki **tizimsiz** … yuritilgan **biznes** | Qora fon, qizil nur |
-| 4 | 5,4–6,6s | shunchaki **tartibsizlik** | Masxaraboz emojilari |
-| 5 | 6,6–8,4s | **Tizim** esa — haqiqiy **daromad** | Chemodan va pullar |
-| 6 | 8,4–10,6s | Tizimsiz: nazorat, mijoz, foyda yo‘q | Qadalgan kartochka |
-| 7 | 10,6–12,2s | Mijoz mehnatni **ko‘rmaydi** | Pushti doira, Instagram uslubidagi yozuv |
-| 8 | 12,2–13,8s | U faqat **natijani** ko‘radi | Oq fon |
-| 9 | 13,8–15,6s | Instagram profil kartochkasi | `avatar.jpg` bilan |
-| 10 | 15,6–17,2s | Siz tinmay **ishlayapsiz** | Klaviatura |
-| 11 | 17,2–18,4s | Lekin **tizimli** emas | 😎 |
-| 12 | 18,4–19,8s | Hoziroq **Direct’ga** yozing | Qora doira |
-| 13 | 19,8–22s | **tizimni** biz quramiz + brend | Qora fon |
+| 1 | 0–2,3s | Sizda **g‘oya** ham, **biznes** ham bor | Lampochka, shtrix-kod |
+| 2 | 2,3–4,5s | Lekin **savdo**-chi? … o‘smayapti | Rastr nuqtali kostyumli odam |
+| 3 | 4,5–7,4s | Chunki **tizimsiz** … yuritilgan **biznes** | Qora fon, qizil nur |
+| 4 | 7,4–8,9s | shunchaki **tartibsizlik** | Masxaraboz emojilari |
+| 5 | 8,9–11,1s | **Tizim** esa — haqiqiy **daromad** | Chemodan va pullar |
+| 6 | 11,1–13,9s | Tizimsiz: nazorat, mijoz, foyda yo‘q | Qadalgan kartochka |
+| 7 | 13,9–16s | Mijoz mehnatni **ko‘rmaydi** | Pushti doira, Instagram uslubidagi yozuv |
+| 8 | 16–18,2s | U faqat **natijani** ko‘radi | Oq fon |
+| 9 | 18,2–21s | Instagram profil kartochkasi | `avatar.jpg` bilan |
+| 10 | 21–23s | Siz tinmay **ishlayapsiz** | Klaviatura |
+| 11 | 23–24,8s | Lekin **tizimli** emas | 😎 |
+| 12 | 24,8–26,6s | Hoziroq **Direct’ga** yozing | Qora doira |
+| 13 | 26,6–30s | **tizimni** biz quramiz + brend | Qora fon |
 
 ```bash
 npm run render:kinetik   # out/kinetik.mp4 (~1–2 daqiqa)
@@ -107,7 +107,7 @@ Matnlar, vaqtlar, profil ma'lumotlari: **`src/kinetik/config.ts`**. Emoji rasmla
 
 Hozirgi ovozlar `public/demo/sfx/kinetik/` da. Ularni `scripts/make-kinetik-sfx.py` kod bilan sintez qilgan, shuning uchun original va litsenziya muammosi yo'q. "Netflix" ham faqat shu uslubdagi original zarba: Netflix'ning asl ovozi mualliflik huquqi bilan himoyalangan.
 
-**Fon musiqasi:** `public/kinetik/music.mp3` (siz bergan trek). U 4,8-soniyadan boshlanadi, shunda musiqaning drop'i aynan "tartibsizlik" zarbasiga tushadi. Effektlar bilan to'qnashmasligi uchun: drop'gacha sokin intro (`musicIntroVolume`), keyin asosiy qism pastroq (`musicVolume`); boom va "ta-dum" zarbalarida musiqa bir lahzaga pasayadi (`musicDuck`); Buildup paytida asta pasayib, unga joy beradi; oxirida silliq so'nadi. Sozlamalar `src/kinetik/config.ts` da. Boshqa musiqa qo'ysangiz, MP3 formatida qo'ying: render brauzeri AAC/m4a ni o'qiy olmaydi va boshini qirqish ishlamay qoladi.
+**Fon musiqasi:** `public/kinetik/music.mp3` (siz bergan trek). Musiqa shunday qirqib boshlanadiki, uning drop'i (`musicDropSeconds`) aynan "tartibsizlik" zarbasiga tushadi; sahna vaqtlarini o'zgartirsangiz ham o'zi moslashadi. Effektlar bilan to'qnashmasligi uchun: drop'gacha sokin intro (`musicIntroVolume`), keyin asosiy qism pastroq (`musicVolume`); boom va "ta-dum" zarbalarida musiqa bir lahzaga pasayadi (`musicDuck`); Buildup paytida asta pasayib, unga joy beradi; oxirida silliq so'nadi. Sozlamalar `src/kinetik/config.ts` da. Boshqa musiqa qo'ysangiz, MP3 formatida qo'ying: render brauzeri AAC/m4a ni o'qiy olmaydi va boshini qirqish ishlamay qoladi.
 
 **O'z ovozlaringizni qo'yish** (masalan, CapCut'dan): faylni jadvaldagi nom bilan **`public/sfx/kinetik/`** ga qo'ying. Video demo o'rniga avtomatik sizning faylingizni oladi. Riser va Buildup uzunligi avtomatik o'qiladi va eng baland nuqtasi aynan zarbaga tushadi. Balandlik: `config.ts` dagi `audio.sfxVolume`.
 

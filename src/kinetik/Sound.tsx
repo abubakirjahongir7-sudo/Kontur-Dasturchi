@@ -98,7 +98,7 @@ const Music: React.FC<{dropAt: number; hits: number[]; buildupFrom: number; buil
   return (
     <Audio
       src={src}
-      trimBefore={Math.round(audio.musicStartSeconds * FPS)}
+      trimBefore={Math.max(0, Math.round(audio.musicDropSeconds * FPS) - dropAt)}
       name="fon musiqasi"
       volume={(f) => {
         const base = f < dropAt - 1 ? audio.musicIntroVolume : audio.musicVolume;
@@ -146,8 +146,8 @@ export const KinetikSound: React.FC<KinetikSoundProps> = ({riserSeconds, buildup
     ...card.items.map((i) => s.card.from + i.at),
   ];
 
-  // Klaviatura: har 6 kadrda tugma bosilishi
-  const typing = Array.from({length: 8}, (_, i) => s.work.from + 4 + i * 6);
+  // Klaviatura: sahna davomida har 6 kadrda tugma bosilishi
+  const typing = Array.from({length: Math.floor((s.work.duration - 8) / 6) + 1}, (_, i) => s.work.from + 4 + i * 6);
 
   return (
     <>

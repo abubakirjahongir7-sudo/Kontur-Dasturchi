@@ -39,23 +39,39 @@ export const brand = {
 
 // ---------- SAHNALAR (kadrlarda) ----------
 
-export const scenes = {
-  idea: {from: 0, duration: 54},
-  growth: {from: 54, duration: 54},
-  because: {from: 108, duration: 54},
-  noise: {from: 162, duration: 36},
-  money: {from: 198, duration: 54},
-  card: {from: 252, duration: 66},
-  client: {from: 318, duration: 48},
-  result: {from: 366, duration: 48},
-  profile: {from: 414, duration: 54},
-  work: {from: 468, duration: 48},
-  smart: {from: 516, duration: 36},
-  direct: {from: 552, duration: 42},
-  fix: {from: 594, duration: 66},
+/**
+ * Har bir sahna uzunligi (kadr). Oxirgi so'z chiqqandan keyin yozuv ~1,3–1,4 soniya
+ * turadi — o'qib ulgurish uchun. Boshlanish kadrlari (`from`) avtomatik hisoblanadi.
+ */
+const sceneDurations = {
+  idea: 70,
+  growth: 66,
+  because: 86,
+  noise: 45,
+  money: 66,
+  card: 84,
+  client: 64,
+  result: 64,
+  profile: 84,
+  work: 60,
+  smart: 54,
+  direct: 56,
+  fix: 101,
 };
 
-export const DURATION = scenes.fix.from + scenes.fix.duration; // 660 kadr = 22 soniya
+type SceneKey = keyof typeof sceneDurations;
+
+export const scenes = (() => {
+  let from = 0;
+  const out = {} as Record<SceneKey, {from: number; duration: number}>;
+  for (const key of Object.keys(sceneDurations) as SceneKey[]) {
+    out[key] = {from, duration: sceneDurations[key]};
+    from += sceneDurations[key];
+  }
+  return out;
+})();
+
+export const DURATION = scenes.fix.from + scenes.fix.duration; // 900 kadr = 30 soniya
 
 // ---------- MATNLAR ----------
 
@@ -81,8 +97,8 @@ export const growth = {
 /** 3. Qora fon, qizil nur: ikki bosqich */
 export const because = {
   first: [[{t: 'Chunki', at: 2}, {t: 'tizimsiz', at: 7, a: true}]] as Line[],
-  switchAt: 25,
-  second: [[{t: 'yuritilgan', at: 27}], [{t: 'biznes', at: 32, a: true}]] as Line[],
+  switchAt: 37,
+  second: [[{t: 'yuritilgan', at: 39}], [{t: 'biznes', at: 44, a: true}]] as Line[],
 };
 
 /** 4. Masxaraboz */
@@ -181,10 +197,10 @@ export const audio = {
   /** Fon musiqasi (public/ ichida). O'chirish uchun: backgroundMusic: null */
   backgroundMusic: 'kinetik/music.mp3' as string | null,
   /**
-   * Musiqa nechanchi soniyadan boshlanadi. 4.8 — musiqadagi "drop" (~10.5s)
-   * aynan "tartibsizlik" zarbasiga (5.7s) tushishi uchun tanlangan.
+   * Musiqadagi "drop" fayl boshidan necha soniyada. Musiqa shunday qirqib boshlanadiki,
+   * drop aynan "tartibsizlik" zarbasiga tushadi (sahna vaqtlari o'zgarsa ham o'zi moslashadi).
    */
-  musicStartSeconds: 4.8,
+  musicDropSeconds: 10.5,
   /** Musiqaning sokin boshlanishi (drop'gacha) va asosiy qismi balandligi */
   musicIntroVolume: 0.6,
   musicVolume: 0.4,

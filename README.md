@@ -64,6 +64,33 @@ npm run render   # out/reel.mp4
 
 Shisha (blur) effekti tufayli render bir necha daqiqa davom etadi (4 yadroli kompyuterda ~7 daqiqa).
 
+## Ikkinchi video: "Kinetik" (22 soniya)
+
+Pinterest'dagi namuna uslubida qilingan qisqa reel. U alohida kompozitsiya, yuqoridagi 60 soniyalik `Reel` ga ta'sir qilmaydi.
+**1080×1920, 30 fps, 660 kadr.** Oq va qora sahnalar almashadi, so'zlar birma-bir xiralikdan chiqadi, kalit so'zlar katta va qizil.
+
+| № | Vaqt | Yozuv | Tasvir |
+|---|---|---|---|
+| 1 | 0–1,8s | Sizda **g‘oya** ham, **biznes** ham bor | Lampochka, shtrix-kod |
+| 2 | 1,8–3,6s | Lekin **savdo**-chi? … o‘smayapti | Rastr nuqtali kostyumli odam |
+| 3 | 3,6–5,4s | Chunki **tizimsiz** … yuritilgan **biznes** | Qora fon, qizil nur |
+| 4 | 5,4–6,6s | shunchaki **tartibsizlik** | Masxaraboz emojilari |
+| 5 | 6,6–8,4s | **Tizim** esa — haqiqiy **daromad** | Chemodan va pullar |
+| 6 | 8,4–10,6s | Tizimsiz: nazorat, mijoz, foyda yo‘q | Qadalgan kartochka |
+| 7 | 10,6–12,2s | Mijoz mehnatni **ko‘rmaydi** | Pushti doira, Instagram uslubidagi yozuv |
+| 8 | 12,2–13,8s | U faqat **natijani** ko‘radi | Oq fon |
+| 9 | 13,8–15,6s | Instagram profil kartochkasi | `avatar.jpg` bilan |
+| 10 | 15,6–17,2s | Siz tinmay **ishlayapsiz** | Klaviatura |
+| 11 | 17,2–18,4s | Lekin **tizimli** emas | 😎 |
+| 12 | 18,4–19,8s | Hoziroq **Direct’ga** yozing | Qora doira |
+| 13 | 19,8–22s | **tizimni** biz quramiz + brend | Qora fon |
+
+```bash
+npm run render:kinetik   # out/kinetik.mp4 (~1–2 daqiqa)
+```
+
+Matnlar, vaqtlar, profil ma'lumotlari: **`src/kinetik/config.ts`**. Emoji rasmlari `public/kinetik/` da (Noto Color Emoji shriftidan olingan, SIL OFL 1.1 litsenziyasi). Ovoz effektlari asosiy video bilan umumiy (`public/sfx/` yoki demo ovozlar).
+
 ## QR kod (reklama uchun)
 
 Sayt havolasi uchun video bilan bir xil uslubdagi QR kod rasmlari `qr/` papkasida:
@@ -106,6 +133,7 @@ src/
   components/                fon, shisha panel/yozuv (Glass.tsx), telefon maketi, chaqnash, savdo paneli namunasi
   fx.ts                      silkinish, spring, glow yordamchilari
   theme.ts                   Montserrat shrifti (lokal, internet shart emas)
+  kinetik/                   ikkinchi video "Kinetik": config.ts (matn va vaqtlar), Scenes, Words, Stage, Props
 ```
 
 ## Litsenziya

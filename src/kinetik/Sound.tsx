@@ -1,8 +1,9 @@
 import React from 'react';
 import {Audio} from '@remotion/media';
-import {Sequence} from 'remotion';
+import {Sequence, interpolate} from 'remotion';
 import {audioAsset} from '../assets';
 import {
+  DURATION,
   FPS,
   audio,
   because,
@@ -70,6 +71,45 @@ const RiseTo: React.FC<{file: string; start: number; end: number; seconds: numbe
   );
 };
 
+const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
+
+/** Zarba paytida musiqa tez pasayib, keyin sekin qaytadi (ducking) */
+const duckAt = (f: number, hits: number[], depth: number) =>
+  Math.min(
+    1,
+    ...hits.map((h) => (f < h - 2 ? 1 : interpolate(f, [h - 2, h, h + 8, h + 26], [1, depth, depth, 1], clamp))),
+  );
+
+/**
+ * Fon musiqasi. Effektlar bilan to'qnashmasligi uchun:
+ * - drop'gacha sokin intro, keyin asosiy qism pastroq balandlikda;
+ * - boom va "ta-dum" zarbalarida musiqa bir lahzaga pasayadi;
+ * - buildup davomida musiqa asta pasayib, unga joy beradi;
+ * - oxirida silliq so'nadi.
+ */
+const Music: React.FC<{dropAt: number; hits: number[]; buildupFrom: number; buildupTo: number}> = ({
+  dropAt,
+  hits,
+  buildupFrom,
+  buildupTo,
+}) => {
+  const src = audio.backgroundMusic ? audioAsset(audio.backgroundMusic) : null;
+  if (!src) return null;
+  return (
+    <Audio
+      src={src}
+      trimBefore={Math.round(audio.musicStartSeconds * FPS)}
+      name="fon musiqasi"
+      volume={(f) => {
+        const base = f < dropAt - 1 ? audio.musicIntroVolume : audio.musicVolume;
+        const build = interpolate(f, [buildupFrom, buildupTo, buildupTo + 30], [1, 0.5, 1], clamp);
+        const fade = interpolate(f, [0, 4, DURATION - 36, DURATION], [0, 1, 1, 0], clamp);
+        return base * build * fade * duckAt(f, hits, audio.musicDuck);
+      }}
+    />
+  );
+};
+
 /** Sahnadagi qizil kalit so'zlar qachon chiqadi */
 const accents = (from: number, lines: Line[]) => lines.flatMap((l) => l.filter((w) => w.a).map((w) => from + w.at));
 
@@ -111,6 +151,13 @@ export const KinetikSound: React.FC<KinetikSoundProps> = ({riserSeconds, buildup
 
   return (
     <>
+      <Music
+        dropAt={dropAt}
+        hits={[s.growth.from + growth.bottom.at, s.client.from, s.profile.from, tadumStart, tadum]}
+        buildupFrom={s.smart.from}
+        buildupTo={tadumStart}
+      />
+
       {/* 2. Kostyumli odam: "o‘smayapti" */}
       <Sfx file={audio.boom} at={s.growth.from + growth.bottom.at} volume={0.85} name="boom: o‘smayapti" />
 
@@ -123,7 +170,7 @@ export const KinetikSound: React.FC<KinetikSoundProps> = ({riserSeconds, buildup
         volume={0.7}
         name="suspense riser"
       />
-      <Sfx file={audio.drop} at={dropAt} volume={1} name="drop: tartibsizlik" />
+      <Sfx file={audio.drop} at={dropAt} volume={0.65} name="drop: tartibsizlik" />
 
       {/* 5. Pul: raqamlar sanaladi, "ding" — "daromad" so'zida */}
       <Sfx
@@ -151,7 +198,7 @@ export const KinetikSound: React.FC<KinetikSoundProps> = ({riserSeconds, buildup
         volume={0.75}
         name="buildup"
       />
-      <Sfx file={audio.netflix} at={tadumStart} volume={1} name="netflix: tizimni biz quramiz" />
+      <Sfx file={audio.netflix} at={tadumStart} volume={0.85} name="netflix: tizimni biz quramiz" />
 
       {pops.map((f, i) => (
         <Sfx key={`pop-${i}`} file={audio.pop} at={f} volume={0.5} name="soft ui pop" />

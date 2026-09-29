@@ -107,6 +107,8 @@ Matnlar, vaqtlar, profil ma'lumotlari: **`src/kinetik/config.ts`**. Emoji rasmla
 
 Hozirgi ovozlar `public/demo/sfx/kinetik/` da. Ularni `scripts/make-kinetik-sfx.py` kod bilan sintez qilgan, shuning uchun original va litsenziya muammosi yo'q. "Netflix" ham faqat shu uslubdagi original zarba: Netflix'ning asl ovozi mualliflik huquqi bilan himoyalangan.
 
+**Fon musiqasi:** `public/kinetik/music.mp3` (siz bergan trek). U 4,8-soniyadan boshlanadi, shunda musiqaning drop'i aynan "tartibsizlik" zarbasiga tushadi. Effektlar bilan to'qnashmasligi uchun: drop'gacha sokin intro (`musicIntroVolume`), keyin asosiy qism pastroq (`musicVolume`); boom va "ta-dum" zarbalarida musiqa bir lahzaga pasayadi (`musicDuck`); Buildup paytida asta pasayib, unga joy beradi; oxirida silliq so'nadi. Sozlamalar `src/kinetik/config.ts` da. Boshqa musiqa qo'ysangiz, MP3 formatida qo'ying: render brauzeri AAC/m4a ni o'qiy olmaydi va boshini qirqish ishlamay qoladi.
+
 **O'z ovozlaringizni qo'yish** (masalan, CapCut'dan): faylni jadvaldagi nom bilan **`public/sfx/kinetik/`** ga qo'ying. Video demo o'rniga avtomatik sizning faylingizni oladi. Riser va Buildup uzunligi avtomatik o'qiladi va eng baland nuqtasi aynan zarbaga tushadi. Balandlik: `config.ts` dagi `audio.sfxVolume`.
 
 ## QR kod (reklama uchun)

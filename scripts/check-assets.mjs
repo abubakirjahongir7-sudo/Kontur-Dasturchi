@@ -9,7 +9,7 @@ const config = ['../src/config.ts', '../src/kinetik/config.ts']
 const musicEnabled = /musicEnabled:\s*true/.test(config);
 const files = [
   ...new Set([...config.matchAll(/(?:image|avatar):\s*'([^']+)'/g)].map((m) => m[1])),
-  ...[...config.matchAll(/^\s*(\w+):\s*'((?:sfx\/(?:kinetik\/)?)?[\w-]+\.(?:mp3|wav|m4a|aac))'/gm)]
+  ...[...config.matchAll(/^\s*(\w+):\s*'((?:sfx\/)?(?:kinetik\/)?[\w-]+\.(?:mp3|wav|m4a|aac))'/gm)]
     .filter((m) => m[1] !== 'music' || musicEnabled)
     .map((m) => m[2]),
 ];

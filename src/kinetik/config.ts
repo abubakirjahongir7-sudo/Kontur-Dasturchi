@@ -177,6 +177,19 @@ export const fix = {
 export const audio = {
   /** Barcha effektlarning umumiy balandligi */
   sfxVolume: 0.9,
+
+  /** Fon musiqasi (public/ ichida). O'chirish uchun: backgroundMusic: null */
+  backgroundMusic: 'kinetik/music.mp3' as string | null,
+  /**
+   * Musiqa nechanchi soniyadan boshlanadi. 4.8 — musiqadagi "drop" (~10.5s)
+   * aynan "tartibsizlik" zarbasiga (5.7s) tushishi uchun tanlangan.
+   */
+  musicStartSeconds: 4.8,
+  /** Musiqaning sokin boshlanishi (drop'gacha) va asosiy qismi balandligi */
+  musicIntroVolume: 0.6,
+  musicVolume: 0.4,
+  /** Effekt zarbalari paytida musiqa shu darajagacha pasayadi (1 = pasaymaydi) */
+  musicDuck: 0.4,
   riser: 'sfx/kinetik/suspense-riser.mp3',
   drop: 'sfx/kinetik/drop.mp3',
   pop: 'sfx/kinetik/soft-ui-pop.mp3',

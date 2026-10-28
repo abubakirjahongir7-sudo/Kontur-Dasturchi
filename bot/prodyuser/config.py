@@ -36,11 +36,14 @@ class Config:
     claude_fallbacks: bool = os.getenv("CLAUDE_FALLBACKS", "1") == "1"
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
     gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
-    # Asosiy model band bo'lsa navbat bilan sinab ko'riladigan zaxira modellar
+    # Asosiy model band bo'lsa yoki javob bermasa navbat bilan sinab ko'riladigan zaxira modellar
     gemini_fallback_models: tuple[str, ...] = tuple(
-        m.strip() for m in os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.8-flash,gemini-flash-latest").split(",")
-        if m.strip()
+        m.strip() for m in os.getenv(
+            "GEMINI_FALLBACK_MODELS", "gemini-3.6-flash,gemini-3.7-flash,gemini-3-flash-preview,gemini-3.5-flash-lite"
+        ).split(",") if m.strip()
     )
+    # Bitta modelga necha soniya kutiladi; javob bo'lmasa keyingi modelga o'tiladi
+    gemini_attempt_timeout: int = int(os.getenv("GEMINI_ATTEMPT_TIMEOUT", "150"))
 
     # Bot egasining Notion integratsiya tokeni. Faqat OWNER_IDS dagilar uchun ishlatiladi:
     # boshqa foydalanuvchilar o'z tokenini ulaydi va bir-birining Notion'iga kira olmaydi.

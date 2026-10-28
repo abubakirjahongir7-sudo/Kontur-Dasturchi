@@ -11,7 +11,7 @@ from .config import config
 
 log = logging.getLogger(__name__)
 
-API = "https://api.notion.com/v1"
+API = f"{config.ai_gateway_url}/notion/v1" if config.ai_gateway_url else "https://api.notion.com/v1"
 TEXT_LIMIT = 1900  # Notion bitta rich_text uchun 2000 belgigacha ruxsat beradi
 READ_LIMIT = 60000  # AI ga yuboriladigan matnning maksimal hajmi
 
@@ -51,12 +51,14 @@ class Notion:
             "Notion-Version": config.notion_version,
             "Content-Type": "application/json",
         }
+        if config.ai_gateway_url:
+            self.headers["x-proxy-secret"] = config.ai_gateway_secret
 
     async def _req(self, method: str, path: str, json: dict | None = None,
                    params: dict | None = None) -> dict[str, Any]:
         try:
             async with aiohttp.ClientSession(headers=self.headers) as s:
-                async with s.request(method, API + path, json=json, params=params, proxy=config.ai_proxy or None,
+                async with s.request(method, API + path, json=json, params=params, proxy=(config.ai_proxy or None) if not config.ai_gateway_url else None,
                                      timeout=aiohttp.ClientTimeout(total=60)) as r:
                     data = await r.json(content_type=None)
                     status = r.status

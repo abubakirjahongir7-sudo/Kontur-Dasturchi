@@ -54,9 +54,37 @@ Botni bir vaqtda faqat **bitta** joyda ishga tushiring. Bir tokenda ikkita nusxa
 
 Docker Hub'dan `python` image tortilmasa: Dokploy → **Build-time Arguments** → `PYTHON_IMAGE=mirror.gcr.io/library/python:3.13-slim`.
 
-### Rossiya serveri: AI_PROXY shart
+### Rossiya serveri: AI uchun chet el orqali ulanish kerak
 
-Google Gemini, Anthropic Claude va Notion API'lari Rossiya IP manzillariga xizmat ko'rsatmaydi ("User location is not supported" va shunga o'xshash xatolar qaytadi). Telegram esa ishlaydi. Shuning uchun `.env` ga chet eldagi **HTTP proksi** yozing:
+Google Gemini, Anthropic Claude va Notion API'lari Rossiya IP manzillariga xizmat ko'rsatmaydi ("User location is not supported" va shunga o'xshash xatolar qaytadi). Telegram esa ishlaydi. Ikki yo'l bor.
+
+#### 1-yo'l (bepul, kartasiz): Cloudflare Worker
+
+1. [dash.cloudflare.com](https://dash.cloudflare.com/sign-up) da email bilan ro'yxatdan o'ting. Karta kerak emas.
+2. **Workers & Pages → Create → Worker** → nom bering (masalan, `ai-gateway`) → **Deploy**.
+3. **Edit code** → hamma kodni o'chirib, [`cloudflare/worker.js`](cloudflare/worker.js) ni joylashtiring → **Deploy**.
+4. **Settings → Variables and Secrets → Add**: turi *Secret*, nomi `PROXY_SECRET`, qiymati uzun tasodifiy parol (masalan, 40 ta harf va raqam) → **Deploy**.
+5. **Settings → Runtime → Placement → Smart**. Bu Worker'ni Google serverlariga yaqin joyda ishlatadi, Rossiyadagi nuqtada emas.
+6. Worker manzili: `https://ai-gateway.<akkaunt>.workers.dev`. Dokploy Environment'ga yozing:
+
+```
+AI_GATEWAY_URL=https://ai-gateway.<akkaunt>.workers.dev
+AI_GATEWAY_SECRET=<4-qadamdagi parol>
+```
+
+Serverda tekshirish (`KALIT` — Gemini kaliti, `PAROL` — `PROXY_SECRET`):
+
+```bash
+curl -s "https://ai-gateway.<akkaunt>.workers.dev/gemini/v1beta/models/gemini-3.5-flash:generateContent" -H "x-proxy-secret: PAROL" -H "x-goog-api-key: KALIT" -H "Content-Type: application/json" -d '{"contents":[{"parts":[{"text":"salom"}]}]}' | head -c 400
+```
+
+Javobda `"text"` bo'lsa, hammasi ishlayapti. `User location is not supported` chiqsa yoki so'rov osilib qolsa, Rossiyadagi Cloudflare cheklovlari xalaqit beryapti. U holda 2-yo'lga o'ting.
+
+Cloudflare bepul tarifi kuniga 100 000 so'rovgacha ruxsat beradi, bot uchun bu bemalol yetadi.
+
+#### 2-yo'l (oyiga ~$2–3, eng ishonchli): shaxsiy HTTP proksi
+
+`.env` ga chet eldagi **HTTP proksi** yozing:
 
 ```
 AI_PROXY=http://login:parol@1.2.3.4:8000

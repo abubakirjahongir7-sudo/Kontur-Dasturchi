@@ -38,7 +38,7 @@ class Config:
     gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
     # Asosiy model band bo'lsa navbat bilan sinab ko'riladigan zaxira modellar
     gemini_fallback_models: tuple[str, ...] = tuple(
-        m.strip() for m in os.getenv("GEMINI_FALLBACK_MODELS", "gemini-flash-latest,gemini-2.5-flash").split(",")
+        m.strip() for m in os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.8-flash,gemini-flash-latest").split(",")
         if m.strip()
     )
 
@@ -53,6 +53,9 @@ class Config:
 
     # Masalan: http://login:parol@1.2.3.4:8000 (faqat http/https proksi)
     ai_proxy: str = _ai_proxy
+    # Proksi o'rniga bepul Cloudflare Worker (bot/cloudflare/worker.js): https://nom.akkaunt.workers.dev
+    ai_gateway_url: str = os.getenv("AI_GATEWAY_URL", "").strip().rstrip("/")
+    ai_gateway_secret: str = os.getenv("AI_GATEWAY_SECRET", "").strip()
     # Telegram ham bloklangan bo'lsa: http://... yoki socks5://...
     telegram_proxy: str = os.getenv("TELEGRAM_PROXY", "").strip()
 

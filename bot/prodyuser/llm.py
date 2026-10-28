@@ -28,7 +28,11 @@ class ClaudeLLM:
         import anthropic
 
         self._anthropic = anthropic
-        self.client = anthropic.AsyncAnthropic(api_key=config.anthropic_api_key or None)
+        gateway = {}
+        if config.ai_gateway_url:
+            gateway = {"base_url": f"{config.ai_gateway_url}/anthropic",
+                       "default_headers": {"x-proxy-secret": config.ai_gateway_secret}}
+        self.client = anthropic.AsyncAnthropic(api_key=config.anthropic_api_key or None, **gateway)
 
     async def generate(self, system: str, prompt: str, schema: type[T],
                        images: list[Image] | None = None, max_tokens: int = 16000) -> T:
@@ -83,7 +87,11 @@ class GeminiLLM:
         from google.genai import errors, types
 
         self.types, self.errors = types, errors
-        self.client = genai.Client(api_key=config.gemini_api_key or None)
+        http_options = None
+        if config.ai_gateway_url:
+            http_options = types.HttpOptions(base_url=f"{config.ai_gateway_url}/gemini/",
+                                             headers={"x-proxy-secret": config.ai_gateway_secret})
+        self.client = genai.Client(api_key=config.gemini_api_key or None, http_options=http_options)
 
     async def generate(self, system: str, prompt: str, schema: type[T],
                        images: list[Image] | None = None, max_tokens: int = 16000) -> T:

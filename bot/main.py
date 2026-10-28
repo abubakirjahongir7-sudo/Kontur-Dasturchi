@@ -25,6 +25,8 @@ def check_config() -> None:
         missing.append("GEMINI_API_KEY")
     if config.llm_provider != "gemini" and not config.anthropic_api_key:
         missing.append("ANTHROPIC_API_KEY")
+    if config.ai_gateway_url and not config.ai_gateway_secret:
+        missing.append("AI_GATEWAY_SECRET")
     if missing:
         sys.exit(f".env faylida to'ldirilmagan: {', '.join(missing)} (namuna: .env.example)")
 
@@ -49,8 +51,8 @@ async def main() -> None:
     ])
 
     sched = asyncio.create_task(scheduler.run(bot))
-    logging.info("Bot ishga tushdi (AI: %s, AI proksi: %s)", config.llm_provider,
-                 "bor" if config.ai_proxy else "yo'q")
+    route = "Cloudflare Worker" if config.ai_gateway_url else "proksi" if config.ai_proxy else "to'g'ridan-to'g'ri"
+    logging.info("Bot ishga tushdi (AI: %s, ulanish: %s)", config.llm_provider, route)
     try:
         await dp.start_polling(bot)
     finally:

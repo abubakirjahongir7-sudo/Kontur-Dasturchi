@@ -7,6 +7,7 @@ import sys
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
+from aiogram.client.telegram import TelegramAPIServer
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import BotCommand
@@ -27,6 +28,8 @@ def check_config() -> None:
         missing.append("ANTHROPIC_API_KEY")
     if config.ai_gateway_url and not config.ai_gateway_secret:
         missing.append("AI_GATEWAY_SECRET")
+    if config.telegram_via_gateway and not config.ai_gateway_url:
+        missing.append("AI_GATEWAY_URL (TELEGRAM_VIA_GATEWAY=1 uchun)")
     if missing:
         sys.exit(f".env faylida to'ldirilmagan: {', '.join(missing)} (namuna: .env.example)")
 
@@ -36,7 +39,13 @@ async def main() -> None:
     check_config()
     await db.init(config.db_path)
 
-    session = AiohttpSession(proxy=config.telegram_proxy) if config.telegram_proxy else None
+    session = None
+    if config.telegram_via_gateway and config.ai_gateway_url:
+        # Parol manzil ichida: aiogram so'rovlariga qo'shimcha sarlavha qo'sha olmaymiz
+        api = TelegramAPIServer.from_base(f"{config.ai_gateway_url}/telegram/{config.ai_gateway_secret}")
+        session = AiohttpSession(api=api)
+    elif config.telegram_proxy:
+        session = AiohttpSession(proxy=config.telegram_proxy)
     bot = Bot(config.bot_token, session=session, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher(storage=MemoryStorage())
     dp.message.outer_middleware(UserMiddleware())
@@ -52,7 +61,8 @@ async def main() -> None:
 
     sched = asyncio.create_task(scheduler.run(bot))
     route = "Cloudflare Worker" if config.ai_gateway_url else "proksi" if config.ai_proxy else "to'g'ridan-to'g'ri"
-    logging.info("Bot ishga tushdi (AI: %s, ulanish: %s)", config.llm_provider, route)
+    tg_route = "Cloudflare Worker" if session and config.telegram_via_gateway else "proksi" if session else "to'g'ridan-to'g'ri"
+    logging.info("Bot ishga tushdi (AI: %s, ulanish: %s, Telegram: %s)", config.llm_provider, route, tg_route)
     try:
         await dp.start_polling(bot)
     finally:

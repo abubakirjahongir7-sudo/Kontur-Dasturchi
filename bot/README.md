@@ -56,7 +56,7 @@ Docker Hub'dan `python` image tortilmasa: Dokploy → **Build-time Arguments** �
 
 ### Rossiya serveri: AI uchun chet el orqali ulanish kerak
 
-Google Gemini, Anthropic Claude va Notion API'lari Rossiya IP manzillariga xizmat ko'rsatmaydi ("User location is not supported" va shunga o'xshash xatolar qaytadi). Telegram esa ishlaydi. Ikki yo'l bor.
+Google Gemini, Anthropic Claude va Notion API'lari Rossiya IP manzillariga xizmat ko'rsatmaydi ("User location is not supported" va shunga o'xshash xatolar qaytadi). Telegram ham ba'zi serverlardan ochilmaydi. Ikki yo'l bor.
 
 #### 1-yo'l (bepul, kartasiz): Cloudflare Worker
 
@@ -78,7 +78,19 @@ Serverda tekshirish (`KALIT` — Gemini kaliti, `PAROL` — `PROXY_SECRET`):
 curl -s "https://ai-gateway.<akkaunt>.workers.dev/gemini/v1beta/models/gemini-3.5-flash:generateContent" -H "x-proxy-secret: PAROL" -H "x-goog-api-key: KALIT" -H "Content-Type: application/json" -d '{"contents":[{"parts":[{"text":"salom"}]}]}' | head -c 400
 ```
 
-Javobda `"text"` bo'lsa, hammasi ishlayapti. `User location is not supported` chiqsa yoki so'rov osilib qolsa, Rossiyadagi Cloudflare cheklovlari xalaqit beryapti. U holda 2-yo'lga o'ting.
+Javobda `"text"` bo'lsa, hammasi ishlayapti.
+
+**Telegram ham serverdan ochilmasa** (`curl https://api.telegram.org` javob bermasa), uni ham shu Worker orqali o'tkazing:
+
+```
+TELEGRAM_VIA_GATEWAY=1
+```
+
+Tekshirish (`TOKEN` — bot tokeni, `PAROL` — `PROXY_SECRET`): `"ok":true` chiqishi kerak.
+
+```bash
+curl -s "https://ai-gateway.<akkaunt>.workers.dev/telegram/PAROL/botTOKEN/getMe"
+``` `User location is not supported` chiqsa yoki so'rov osilib qolsa, Rossiyadagi Cloudflare cheklovlari xalaqit beryapti. U holda 2-yo'lga o'ting.
 
 Cloudflare bepul tarifi kuniga 100 000 so'rovgacha ruxsat beradi, bot uchun bu bemalol yetadi.
 

@@ -59,7 +59,9 @@ class Config:
     # Proksi o'rniga bepul Cloudflare Worker (bot/cloudflare/worker.js): https://nom.akkaunt.workers.dev
     ai_gateway_url: str = os.getenv("AI_GATEWAY_URL", "").strip().rstrip("/")
     ai_gateway_secret: str = os.getenv("AI_GATEWAY_SECRET", "").strip()
-    # Telegram ham bloklangan bo'lsa: http://... yoki socks5://...
+    # Telegram serverdan ochilmasa (Rossiya), uni ham Cloudflare Worker orqali o'tkazish
+    telegram_via_gateway: bool = os.getenv("TELEGRAM_VIA_GATEWAY", "0") == "1"
+    # Yoki Telegram uchun alohida proksi: http://... yoki socks5://...
     telegram_proxy: str = os.getenv("TELEGRAM_PROXY", "").strip()
 
     db_path: str = os.getenv("DB_PATH", "data/bot.db")

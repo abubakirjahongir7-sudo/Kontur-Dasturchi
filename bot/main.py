@@ -6,6 +6,7 @@ import sys
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
+from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import BotCommand
@@ -33,7 +34,8 @@ async def main() -> None:
     check_config()
     await db.init(config.db_path)
 
-    bot = Bot(config.bot_token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    session = AiohttpSession(proxy=config.telegram_proxy) if config.telegram_proxy else None
+    bot = Bot(config.bot_token, session=session, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher(storage=MemoryStorage())
     dp.message.outer_middleware(UserMiddleware())
     dp.callback_query.outer_middleware(UserMiddleware())
@@ -47,7 +49,8 @@ async def main() -> None:
     ])
 
     sched = asyncio.create_task(scheduler.run(bot))
-    logging.info("Bot ishga tushdi (AI: %s)", config.llm_provider)
+    logging.info("Bot ishga tushdi (AI: %s, AI proksi: %s)", config.llm_provider,
+                 "bor" if config.ai_proxy else "yo'q")
     try:
         await dp.start_polling(bot)
     finally:

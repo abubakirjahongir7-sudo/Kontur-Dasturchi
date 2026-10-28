@@ -4,3 +4,4 @@ google-genai==2.33.0
 aiosqlite==0.22.1
 python-dotenv==1.2.4
 tzdata==2026.5
+aiohttp-socks==0.12.0

@@ -40,6 +40,30 @@ python main.py
 
 `.env` da kamida `BOT_TOKEN` va `ANTHROPIC_API_KEY` (yoki `LLM_PROVIDER=gemini` + `GEMINI_API_KEY`) bo'lishi kerak. `OWNER_IDS` ga o'z Telegram ID ingizni yozing (@userinfobot dan bilib olasiz).
 
+### Dokploy orqali (GitHub'dan avtomatik deploy)
+
+1. Dokploy → **Projects** → loyiha → **Create Service → Application**.
+2. **Provider: GitHub** → repo `Kontur-Dasturchi`, branch. **Build Path:** `/bot`.
+3. **Build Type: Dockerfile**, Dockerfile: `Dockerfile`.
+4. **Environment** bo'limiga `.env.example` dagi o'zgaruvchilarni qiymatlari bilan yozing.
+5. **Advanced → Mounts** → *Volume Mount*, mount path: `/app/data`. Bu shart: aks holda har bir deployda profillar va senariylar o'chib ketadi.
+6. Domen va port kerak emas: bot Telegram'dan o'zi xabar olib turadi (polling).
+7. **Deploy** → **Logs** da `Bot ishga tushdi` yozuvi chiqishi kerak.
+
+Botni bir vaqtda faqat **bitta** joyda ishga tushiring. Bir tokenda ikkita nusxa ishlasa, Telegram `Conflict` xatosi beradi.
+
+Docker Hub'dan `python` image tortilmasa: Dokploy → **Build-time Arguments** → `PYTHON_IMAGE=mirror.gcr.io/library/python:3.13-slim`.
+
+### Rossiya serveri: AI_PROXY shart
+
+Google Gemini, Anthropic Claude va Notion API'lari Rossiya IP manzillariga xizmat ko'rsatmaydi ("User location is not supported" va shunga o'xshash xatolar qaytadi). Telegram esa ishlaydi. Shuning uchun `.env` ga chet eldagi **HTTP proksi** yozing:
+
+```
+AI_PROXY=http://login:parol@1.2.3.4:8000
+```
+
+AI va Notion so'rovlari shu proksi orqali ketadi, Telegram esa to'g'ridan-to'g'ri ishlayveradi. Proksi Yevropa yoki AQShda bo'lsin (Germaniya, Niderlandiya, Finlandiya...). Arzon shaxsiy (private) HTTP proksi yoki chet eldagi istalgan kichik VPS'ga o'rnatilgan proksi yetarli. Telegram ham ishlamay qolsa, `TELEGRAM_PROXY` ni to'ldiring (`http://` yoki `socks5://`).
+
 ### Serverda doimiy ishlatish (Ubuntu, systemd)
 
 `/etc/systemd/system/prodyuser.service`:

@@ -7,6 +7,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Rossiya serverida Gemini, Claude va Notion API'lari ishlamaydi (region bloklangan).
+# AI_PROXY berilsa, shu xizmatlarga so'rovlar chet eldagi proksi orqali ketadi.
+# Gemini va Claude kutubxonalari proksini HTTPS_PROXY muhit o'zgaruvchisidan o'qiydi,
+# Telegram (aiogram) esa uni o'qimaydi — u to'g'ridan-to'g'ri ishlayveradi.
+_ai_proxy = os.getenv("AI_PROXY", "").strip()
+if _ai_proxy:
+    os.environ["HTTPS_PROXY"] = os.environ["HTTP_PROXY"] = _ai_proxy
+
 
 def _ids(raw: str | None) -> frozenset[int]:
     if not raw:
@@ -42,6 +50,11 @@ class Config:
     owner_ids: frozenset[int] = field(default_factory=lambda: _ids(os.getenv("OWNER_IDS")))
     # Bo'sh bo'lsa — bot hamma uchun ochiq
     allowed_user_ids: frozenset[int] = field(default_factory=lambda: _ids(os.getenv("ALLOWED_USER_IDS")))
+
+    # Masalan: http://login:parol@1.2.3.4:8000 (faqat http/https proksi)
+    ai_proxy: str = _ai_proxy
+    # Telegram ham bloklangan bo'lsa: http://... yoki socks5://...
+    telegram_proxy: str = os.getenv("TELEGRAM_PROXY", "").strip()
 
     db_path: str = os.getenv("DB_PATH", "data/bot.db")
     default_tz: str = os.getenv("DEFAULT_TZ", "Asia/Tashkent")

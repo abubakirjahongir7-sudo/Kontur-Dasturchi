@@ -54,24 +54,29 @@ class Notion:
 
     async def _req(self, method: str, path: str, json: dict | None = None,
                    params: dict | None = None) -> dict[str, Any]:
-        async with aiohttp.ClientSession(headers=self.headers) as s:
-            async with s.request(method, API + path, json=json, params=params,
-                                 timeout=aiohttp.ClientTimeout(total=60)) as r:
-                data = await r.json(content_type=None)
-                if r.status >= 400:
-                    code = (data or {}).get("code", "")
-                    log.warning("Notion %s %s -> %s %s", method, path, r.status, data)
-                    if r.status == 401:
-                        raise NotionError("Notion token noto'g'ri yoki o'chirilgan.")
-                    if r.status == 404 or code == "object_not_found":
-                        raise NotionError(
-                            "Sahifa topilmadi. Notion'da sahifani oching → «•••» → «Connections» → "
-                            "integratsiyangizni qo'shing va qayta urinib ko'ring."
-                        )
-                    if r.status == 429:
-                        raise NotionError("Notion hozir band. Birozdan keyin urinib ko'ring.")
-                    raise NotionError(f"Notion xatosi: {(data or {}).get('message', r.status)}")
-                return data
+        try:
+            async with aiohttp.ClientSession(headers=self.headers) as s:
+                async with s.request(method, API + path, json=json, params=params, proxy=config.ai_proxy or None,
+                                     timeout=aiohttp.ClientTimeout(total=60)) as r:
+                    data = await r.json(content_type=None)
+                    status = r.status
+        except aiohttp.ClientError as e:
+            log.warning("Notion connection error: %s", e)
+            raise NotionError("Notion'ga ulanib bo'lmadi. Serverdan Notion ochilmasa, .env ga AI_PROXY qo'shing.") from e
+        if status >= 400:
+            code = (data or {}).get("code", "")
+            log.warning("Notion %s %s -> %s %s", method, path, status, data)
+            if status == 401:
+                raise NotionError("Notion token noto'g'ri yoki o'chirilgan.")
+            if status == 404 or code == "object_not_found":
+                raise NotionError(
+                    "Sahifa topilmadi. Notion'da sahifani oching → «•••» → «Connections» → "
+                    "integratsiyangizni qo'shing va qayta urinib ko'ring."
+                )
+            if status == 429:
+                raise NotionError("Notion hozir band. Birozdan keyin urinib ko'ring.")
+            raise NotionError(f"Notion xatosi: {(data or {}).get('message', status)}")
+        return data
 
     async def me(self) -> dict[str, Any]:
         return await self._req("GET", "/users/me")

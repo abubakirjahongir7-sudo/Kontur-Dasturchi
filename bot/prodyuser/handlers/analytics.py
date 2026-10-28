@@ -1,6 +1,7 @@
 """Video statistikasini qabul qilish, AI tahlili va natija past bo'lsa senariyni qayta yozish."""
 
-from html import escape as e
+from functools import partial
+from html import escape
 from io import BytesIO
 
 from aiogram import Bot, F, Router
@@ -11,6 +12,9 @@ from aiogram.utils.chat_action import ChatActionSender
 from .. import db, keyboards, render, services
 from ..llm import LLMError
 from ..states import Analytics
+
+# Telegram HTML uchun faqat <, > va & ni ekranlash kifoya — apostroflar o'z holicha qoladi
+e = partial(escape, quote=False)
 
 router = Router(name="analytics")
 

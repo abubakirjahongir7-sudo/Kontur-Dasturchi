@@ -1,6 +1,7 @@
 """Senariy olish, qayta yozish, «Joyladim» belgisi va senariylar ro'yxati."""
 
-from html import escape as e
+from functools import partial
+from html import escape
 
 from aiogram import Bot, F, Router
 from aiogram.fsm.context import FSMContext
@@ -11,6 +12,9 @@ from .. import db, keyboards, services
 from ..config import config
 from ..llm import LLMError
 from ..states import Gen, Rewrite
+
+# Telegram HTML uchun faqat <, > va & ni ekranlash kifoya — apostroflar o'z holicha qoladi
+e = partial(escape, quote=False)
 
 router = Router(name="scenarios")
 

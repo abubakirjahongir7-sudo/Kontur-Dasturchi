@@ -80,30 +80,44 @@ class ClaudeLLM:
 class GeminiLLM:
     def __init__(self) -> None:
         from google import genai
-        from google.genai import types
+        from google.genai import errors, types
 
-        self.types = types
+        self.types, self.errors = types, errors
         self.client = genai.Client(api_key=config.gemini_api_key or None)
 
     async def generate(self, system: str, prompt: str, schema: type[T],
                        images: list[Image] | None = None, max_tokens: int = 16000) -> T:
-        types = self.types
+        types, errors = self.types, self.errors
         parts: list = [types.Part.from_bytes(data=data, mime_type=mime) for data, mime in images or []]
         parts.append(prompt)
-        try:
-            resp = await self.client.aio.models.generate_content(
-                model=config.gemini_model,
-                contents=parts,
-                config=types.GenerateContentConfig(
-                    system_instruction=system,
-                    response_mime_type="application/json",
-                    response_schema=schema,
-                    max_output_tokens=max_tokens,
-                ),
-            )
-        except Exception as e:  # google-genai turli xil xato klasslarini qaytaradi
-            log.exception("Gemini error")
-            raise LLMError("Gemini javob bermadi. Keyinroq urinib ko'ring.") from e
+        cfg = types.GenerateContentConfig(
+            system_instruction=system,
+            response_mime_type="application/json",
+            response_schema=schema,
+            max_output_tokens=max_tokens,
+        )
+        # Model band bo'lsa (503) yoki limit tugasa (429) — keyingi zaxira modelga o'tamiz
+        models = [config.gemini_model, *config.gemini_fallback_models]
+        resp = None
+        for i, model in enumerate(models):
+            try:
+                resp = await self.client.aio.models.generate_content(model=model, contents=parts, config=cfg)
+                break
+            except errors.APIError as e:
+                busy = e.code in (429, 500, 503, 504)
+                if busy and i < len(models) - 1:
+                    log.warning("Gemini %s band (%s), %s ga o'tilmoqda", model, e.code, models[i + 1])
+                    continue
+                log.error("Gemini error %s: %s", e.code, e)
+                if busy:
+                    raise LLMError("Gemini hozir band. Bir necha daqiqadan keyin urinib ko'ring.") from e
+                if e.code in (401, 403):
+                    raise LLMError("GEMINI_API_KEY noto'g'ri yoki ruxsat yo'q.") from e
+                raise LLMError("Gemini so'rovni qabul qilmadi.") from e
+            except Exception as e:
+                log.exception("Gemini connection error")
+                raise LLMError("Gemini serveriga ulanib bo'lmadi.") from e
+        assert resp is not None
 
         if isinstance(resp.parsed, schema):
             return resp.parsed

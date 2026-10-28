@@ -1,6 +1,7 @@
 """Notion: tokenni ulash, sahifadan ma'lumot o'qish va senariy/profilni yozish."""
 
-from html import escape as e
+from functools import partial
+from html import escape
 
 from aiogram import Bot, F, Router
 from aiogram.fsm.context import FSMContext
@@ -12,6 +13,9 @@ from ..llm import LLMError
 from ..notion import Notion, NotionError, parse_id
 from ..states import NotionSt
 from .onboarding import start_questions
+
+# Telegram HTML uchun faqat <, > va & ni ekranlash kifoya — apostroflar o'z holicha qoladi
+e = partial(escape, quote=False)
 
 router = Router(name="notion")
 
@@ -98,7 +102,7 @@ async def _write(message: Message, bot: Bot, state: FSMContext, user: dict, targ
         return
     if data.get("kind") == "scenario":
         await db.update_scenario(data["ident"], uid, notion_url=url)
-    await message.answer(f"✅ Notion'ga yozildi: <a href=\"{e(url)}\">{e(title)}</a>\n📂 {e(target.title)}",
+    await message.answer(f"✅ Notion'ga yozildi: <a href=\"{escape(url)}\">{e(title)}</a>\n📂 {e(target.title)}",
                          disable_web_page_preview=True)
 
 

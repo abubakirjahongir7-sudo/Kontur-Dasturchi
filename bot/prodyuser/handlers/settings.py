@@ -1,7 +1,8 @@
 """Senariy yuborish vaqtlari, soni, vaqt zonasi va to'xtatish."""
 
 import re
-from html import escape as e
+from functools import partial
+from html import escape
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from aiogram import F, Router
@@ -10,6 +11,9 @@ from aiogram.types import CallbackQuery, Message
 
 from .. import db, keyboards
 from ..states import Setup
+
+# Telegram HTML uchun faqat <, > va & ni ekranlash kifoya — apostroflar o'z holicha qoladi
+e = partial(escape, quote=False)
 
 router = Router(name="settings")
 

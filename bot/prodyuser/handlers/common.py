@@ -1,7 +1,8 @@
 """/start, /help, /cancel va asosiy menyu tugmalari.
 Bu router birinchi ulanadi: menyu tugmasi bosilsa, har qanday holatdan chiqib, kerakli bo'limga o'tadi."""
 
-from html import escape as e
+from functools import partial
+from html import escape
 
 from aiogram import Bot, F, Router
 from aiogram.filters import Command, CommandStart
@@ -11,6 +12,9 @@ from aiogram.types import CallbackQuery, Message
 from .. import keyboards as kb
 from ..config import config
 from . import analytics, notion_h, onboarding, profile, scenarios, settings
+
+# Telegram HTML uchun faqat <, > va & ni ekranlash kifoya — apostroflar o'z holicha qoladi
+e = partial(escape, quote=False)
 
 router = Router(name="common")
 

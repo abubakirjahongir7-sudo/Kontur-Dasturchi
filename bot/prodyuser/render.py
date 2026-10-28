@@ -1,10 +1,14 @@
 """Senariy, strategiya va tahlilni Telegram (HTML) va Notion ko'rinishiga keltirish."""
 
-from html import escape as e
+from functools import partial
+from html import escape
 from typing import Any
 
 from . import notion
 from .questions import QUESTIONS, SECTIONS
+
+# Telegram HTML uchun faqat <, > va & ni ekranlash kifoya — apostroflar o'z holicha qoladi
+e = partial(escape, quote=False)
 
 GOALS = {"views": "👀 Ko'rishlar", "followers": "➕ Obunachilar", "clients": "💰 Mijozlar"}
 VERDICTS = {"viral": "🔥 Viral", "good": "✅ Yaxshi", "average": "😐 O'rtacha", "poor": "📉 Past"}

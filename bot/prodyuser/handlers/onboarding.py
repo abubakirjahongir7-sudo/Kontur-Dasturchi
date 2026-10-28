@@ -2,7 +2,8 @@
 keyin AI aniqlashtiruvchi savollar (2 ta variant) va kontent strategiya."""
 
 import logging
-from html import escape as e
+from functools import partial
+from html import escape
 from io import BytesIO
 
 from aiogram import Bot, F, Router
@@ -17,6 +18,9 @@ from ..questions import ALL_IDS, BY_ID, SECTIONS, position
 from ..states import Clarify, Setup
 
 log = logging.getLogger(__name__)
+# Telegram HTML uchun faqat <, > va & ni ekranlash kifoya — apostroflar o'z holicha qoladi
+e = partial(escape, quote=False)
+
 router = Router(name="onboarding")
 
 

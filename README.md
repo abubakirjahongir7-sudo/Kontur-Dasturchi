@@ -111,3 +111,7 @@ src/
 ## Litsenziya
 
 Remotion jismoniy shaxslar va 3 kishigacha bo'lgan kompaniyalar uchun bepul. Kattaroq jamoa uchun [remotion.pro](https://www.remotion.pro) litsenziyasi kerak bo'ladi.
+
+## Telegram bot: @prodyusserbot
+
+`bot/` papkasida Instagram uchun AI prodyuser bot bor. U brendni o'rganadi, jadval bo'yicha senariy yuboradi, video statistikasini tahlil qiladi va Notion bilan ishlaydi. Batafsil: [bot/README.md](bot/README.md).
